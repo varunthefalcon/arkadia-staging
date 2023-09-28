@@ -1,95 +1,96 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
+
+import Image from "next/image";
+import { Button } from "antd";
+import styles from "./page.module.css";
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main>
+      <div className={styles.landing_header}>
+        <Image src="/assets/nav_logo.png" width={160} height={30} />
+      </div>
+      <div className={styles.landing_wrapper}>
+        <div className={styles.imageWrapper}>
+          <Image
+            src="/assets/landing_arrow.png"
+            alt="Next.js Logo"
+            fill
+            priority
+          />
+        </div>
+        <div className={styles.right_wrapper}>
+          <p className={styles.landing_title}>
+            Secure loans <br /> Connect investors
+          </p>
+          <p className={styles.landing_subtitle}>
+            Bridge opportunity and capital by using assets as collateral to
+            connect professional investors with the resources you need
+          </p>
+          <Button className={styles.landing_button} ghost type="primary">
+            <span>
+              Asset Owner
+              <Image
+                src="/assets/landing_arrow_subtitle.png"
+                alt="Next.js subtitle"
+                style={{ paddingTop: "4px", marginLeft: "10px" }}
+                height={12}
+                width={12}
+                priority
+              />
+            </span>
+          </Button>
+
+          <Button className={styles.landing_button} ghost type="primary">
+            <span>
+              Relationship Manager
+              <Image
+                src="/assets/landing_arrow_subtitle.png"
+                alt="Next.js subtitle"
+                style={{ paddingTop: "4px", marginLeft: "10px" }}
+                height={12}
+                width={12}
+                priority
+              />
+            </span>
+          </Button>
+          <div style={{ display: "flex" }}>
+            <div className={styles.landing_stat_wrapper}>
+              <span className={styles.landing_stat_wrapper_label}>
+                Total Asset Financed{" "}
+              </span>
+              <br />
+              <span className={styles.landing_stat_wrapper_value}>$ 256M</span>
+            </div>
+            <div className={styles.landing_stat_wrapper}>
+              <span className={styles.landing_stat_wrapper_label}>
+                Asset Tokenized{" "}
+              </span>
+              <br />
+              <span className={styles.landing_stat_wrapper_value}>1108</span>
+            </div>
+          </div>
         </div>
       </div>
-
-      <div className={styles.center}>
+      <div className={styles.landing_footer}>
+        Working with{" "}
         <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
+          src="/assets/partner_1.png"
+          alt="Next.js subtitle"
+          style={{ paddingTop: "4px", marginLeft: "10px" }}
+          height={30}
+          width={100}
+          priority
+        />
+        <Image
+          src="/assets/partner_2.png"
+          alt="Next.js subtitle"
+          style={{ paddingTop: "4px", marginLeft: "10px" }}
+          height={30}
+          width={200}
           priority
         />
       </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
     </main>
-  )
+  );
 }
