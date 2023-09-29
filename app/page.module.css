@@ -17,7 +17,7 @@
 }
 
 .landing_title {
-  font-family: Frank Ruhl Libre;
+  font-family: var(--font-frank);
   font-size: 56px;
   font-weight: 600;
   color: #050c36;

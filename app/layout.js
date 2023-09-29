@@ -6,7 +6,7 @@ const frank_Ruhl_Libre = Frank_Ruhl_Libre({
   weight: ["variable"],
   style: ["normal"],
   subsets: ["latin"],
-  variable: "--font-frank-ruhl-libre",
+  variable: "--font-frank",
 });
 
 const mulish = Mulish({
