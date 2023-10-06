@@ -1,0 +1,107 @@
+.imageWrapper {
+  height: calc(100vh - 100px);
+  width: 50vw;
+  position: relative;
+  margin-right: 20px;
+}
+
+.landing_wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  background: #f8f8fd;
+}
+
+.right_wrapper {
+  margin: 20px;
+}
+
+.landing_title {
+  font-family: var(--font-frank);
+  font-size: 50px;
+  font-weight: 600;
+  color: #050c36;
+  line-height: 62px;
+  letter-spacing: 0em;
+  text-align: left;
+  margin-bottom: 28px;
+}
+
+.landing_subtitle {
+  font-family: var(--font-mulish);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 27px;
+  letter-spacing: 0em;
+  max-width: 500px;
+  text-align: justify;
+  margin-bottom: 32px;
+}
+
+.landing_header {
+  height: 50px;
+  padding: 8px;
+}
+
+.landing_footer {
+  height: 50px;
+  background: #0a1767;
+  text-align: center;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.login_buttons {
+  padding: 8px 16px !important;
+  height: 40px !important;
+  margin-right: 25px;
+  border-radius: 2px;
+  background-color: var(--brand-color) !important;
+  color: #f8f8fd !important;
+  font-weight: 700 !important;
+  border: 1px;
+  gap: 10px;
+}
+
+.login_buttons_ghost {
+  padding: 8px 16px !important;
+  height: 40px !important;
+  margin-right: 25px;
+  border-radius: 2px;
+  font-weight: 700 !important;
+  border: 1px;
+  gap: 10px;
+
+  color: var(--brand-color) !important;
+  background-color: #f8f8fd !important;
+}
+.landing_stat_wrapper {
+  margin-top: 64px;
+  margin-right: 30px;
+}
+
+.landing_stat_wrapper_label {
+  color: #696d86;
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.landing_stat_wrapper_value {
+  font-family: Frank Ruhl Libre;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 35px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
+/* Tablet and Smaller Desktop */
+@media (min-width: 701px) and (max-width: 1120px) {
+}
