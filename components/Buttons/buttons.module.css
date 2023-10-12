@@ -1,0 +1,11 @@
+.landing_button {
+  padding: 8px 24px !important;
+  height: 56px !important;
+  margin-right: 25px;
+  border-radius: 2px;
+  border: 1px;
+  background-color: #f8f8fd !important;
+  color: #0a1767 !important;
+  font-weight: 700 !important;
+  gap: 10px;
+}

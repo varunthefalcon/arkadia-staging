@@ -3,7 +3,9 @@
 import Image from "next/image";
 import { Button, Form } from "antd";
 import styles from "./page.module.css";
-import { Input, Checkbox } from "antd";
+import { Input } from "antd";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function SignIn() {
   const onFinish = (values) => {
@@ -15,9 +17,7 @@ export default function SignIn() {
 
   return (
     <main>
-      <div className={styles.landing_header}>
-        <Image src="/assets/nav_logo.png" width={160} height={30} />
-      </div>
+      <Navbar />
       <div className={styles.landing_wrapper}>
         <div className={styles.imageWrapper}>
           <Image
@@ -28,7 +28,13 @@ export default function SignIn() {
           />
         </div>
         <div className={styles.right_wrapper}>
-          <p className={styles.landing_title}>Login</p>
+          <p className={styles.landing_title}>
+            Secure loans <br /> Connect investors
+          </p>
+          <p className={styles.landing_subtitle}>
+            Bridge opportunity and capital by using assets as collateral to
+            connect professional investors with the resources you need
+          </p>
 
           <Form
             name="basic"
@@ -49,12 +55,11 @@ export default function SignIn() {
             autoComplete="off"
           >
             <Form.Item
-              label="Username"
-              name="username"
+              label="Email"
+              name="email"
               rules={[
                 {
-                  required: true,
-                  message: "Please input your username!",
+                  message: "Please input your email address!",
                 },
               ]}
             >
@@ -66,7 +71,6 @@ export default function SignIn() {
               name="password"
               rules={[
                 {
-                  required: true,
                   message: "Please input your password!",
                 },
               ]}
@@ -86,27 +90,25 @@ export default function SignIn() {
               <span>Forgot Password</span>
             </Button>
           </Form>
+          <div style={{ display: "flex" }}>
+            <div className={styles.landing_stat_wrapper}>
+              <span className={styles.landing_stat_wrapper_label}>
+                Total Asset Financed{" "}
+              </span>
+              <br />
+              <span className={styles.landing_stat_wrapper_value}>$ 256M</span>
+            </div>
+            <div className={styles.landing_stat_wrapper}>
+              <span className={styles.landing_stat_wrapper_label}>
+                Asset Tokenized{" "}
+              </span>
+              <br />
+              <span className={styles.landing_stat_wrapper_value}>1108</span>
+            </div>
+          </div>
         </div>
       </div>
-      <div className={styles.landing_footer}>
-        Working with{" "}
-        <Image
-          src="/assets/partner_1.png"
-          alt="Next.js subtitle"
-          style={{ paddingTop: "4px", marginLeft: "10px" }}
-          height={30}
-          width={100}
-          priority
-        />
-        <Image
-          src="/assets/partner_2.png"
-          alt="Next.js subtitle"
-          style={{ paddingTop: "4px", marginLeft: "10px" }}
-          height={30}
-          width={200}
-          priority
-        />
-      </div>
+      <Footer />
     </main>
   );
 }

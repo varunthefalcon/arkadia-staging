@@ -1,0 +1,12 @@
+.landing_footer {
+  height: 50px;
+  background: #0a1767;
+  text-align: center;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  font-size: 12px;
+  font-weight: bold;
+}

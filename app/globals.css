@@ -74,3 +74,7 @@ a {
     color-scheme: dark;
   }
 }
+
+.ant-popover {
+  padding: 0 !important;
+}
