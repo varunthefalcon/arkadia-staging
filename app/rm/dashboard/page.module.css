@@ -1,0 +1,29 @@
+.pageTitle {
+  font-family: --font-frank;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 29px;
+  letter-spacing: 0em;
+  text-align: left;
+  margin-top: 48px;
+  margin-bottom: 32px;
+}
+
+.bannerLabel {
+  font-family: var(--font-mulish);
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 17px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
+.bannerValue {
+  font-family: --font-frank;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 29px;
+  letter-spacing: 0em;
+  text-align: left;
+  margin: 8px 0;
+}

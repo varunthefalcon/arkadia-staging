@@ -48,7 +48,12 @@ const ArkTable = (props) => {
         >
           {title}
         </div>
-        <Table columns={columnData} dataSource={rowData} {...additionalProps} />
+        <Table
+          columns={columnData}
+          dataSource={rowData}
+          {...additionalProps}
+          pagination={{ position: ["none", "none"] }}
+        />
       </div>
     </>
   );

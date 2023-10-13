@@ -18,6 +18,7 @@ const Navbar = (props) => {
       <div className={styles.landing_header}>
         <div style={{ display: "flex" }}>
           <img
+            onClick={() => router.push("/")}
             src="/assets/nav_logo.png"
             className={styles.landing_header_img}
             width={160}

@@ -11,6 +11,7 @@
 .landing_header_img {
   padding: 10px 0;
   margin-right: 100px;
+  cursor: pointer;
 }
 
 .navItems {
