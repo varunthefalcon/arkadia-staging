@@ -3,7 +3,7 @@
   height: 300px;
 }
 
-/* .landing_button {
+.landing_button {
   padding: 8px 24px !important;
   height: 56px !important;
   margin-right: 25px;
@@ -13,7 +13,7 @@
   color: #0a1767 !important;
   font-weight: 700 !important;
   gap: 10px;
-} */
+}
 
 .banner_title {
   font-family: --font-frank;

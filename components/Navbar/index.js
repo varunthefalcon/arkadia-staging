@@ -1,11 +1,16 @@
 "use client";
 
-import { Badge, Image, Popover } from "antd";
+import { Badge, Popover } from "antd";
 import styles from "./navbar.module.css";
 import { BellFilled, CaretRightFilled } from "@ant-design/icons";
 import AvatarBadge from "@/components/Badge";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const Navbar = (props) => {
+  const pathname = usePathname();
+  const router = useRouter();
+
   const { showPages = false, showUserActions = false } = props;
 
   return (
@@ -23,16 +28,18 @@ const Navbar = (props) => {
               <span
                 className={[
                   styles.navItems,
-                  true ? styles.active_navItem : "",
+                  pathname.includes("dashboard") ? styles.active_navItem : "",
                 ].join(" ")}
+                onClick={() => router.push("/ao/dashboard")}
               >
                 Dashboard
               </span>
               <span
                 className={[
                   styles.navItems,
-                  true ? styles.active_navItem : "",
+                  pathname.includes("marketplace") ? styles.active_navItem : "",
                 ].join(" ")}
+                onClick={() => router.push("/marketplace")}
               >
                 Marketplace
               </span>

@@ -1,6 +1,7 @@
 import { ConfigProvider } from "antd";
 import "./globals.css";
 import { Frank_Ruhl_Libre, Mulish } from "next/font/google";
+import StyledComponentsRegistry from "../lib/AntdRegistry";
 
 const frank_Ruhl_Libre = Frank_Ruhl_Libre({
   weight: ["variable"],
@@ -32,7 +33,7 @@ export default function RootLayout({ children }) {
             },
           }}
         >
-          {children}
+          <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
         </ConfigProvider>
       </body>
     </html>

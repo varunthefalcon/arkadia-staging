@@ -4,6 +4,8 @@ import Image from "next/image";
 import { Button, Form, Table } from "antd";
 import styles from "./page.module.css";
 import { Input, Checkbox } from "antd";
+import ArkTable from "@/components/tables";
+import Navbar from "@/components/Navbar";
 
 export default function SignIn() {
   const dataSource = [
@@ -30,9 +32,7 @@ export default function SignIn() {
 
   return (
     <main>
-      <div className={styles.landing_header}>
-        <Image src="/assets/nav_logo.png" width={160} height={30} />
-      </div>
+      <Navbar showPages={true} showUserActions={true} />
       <div
         className={styles.banner}
         style={{
@@ -86,40 +86,21 @@ export default function SignIn() {
         >
           <p className={styles.pageTitle}>Hello, Asset Owner</p>
 
-          <div className={styles.tableWrapper}>
-            <div className={styles.tableTitle}>My Activity</div>
-            <Table
-              columns={dataSource}
-              dataSource={[]}
-              locale={{
-                emptyText: (
-                  <div style={{ marginBlock: "60px" }}>
-                    <Button
-                      type="primary"
-                      style={{ backgroundColor: "#1027B8" }}
-                    >
-                      Create New Listing
-                    </Button>
-                  </div>
-                ),
-              }}
-            />
-          </div>
+          <ArkTable
+            title="My Activity"
+            columnData={dataSource}
+            rowData={[]}
+            emptylistAsButton={true}
+            localeLabel="Create New Listing"
+          />
 
-          <div style={{ marginBlock: "32px" }} className={styles.tableWrapper}>
-            <div className={styles.tableTitle}>My Transaction</div>
-            <Table
-              columns={dataSource}
-              dataSource={[]}
-              locale={{
-                emptyText: (
-                  <div style={{ marginBlock: "60px" }}>
-                    You have no transaction records.
-                  </div>
-                ),
-              }}
-            />
-          </div>
+          <ArkTable
+            title="My Transaction"
+            columnData={dataSource}
+            rowData={[]}
+            emptylistAsText={true}
+            localeLabel="You have no transaction records."
+          />
         </div>
       </div>
     </main>

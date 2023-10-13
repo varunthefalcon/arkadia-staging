@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Button } from "antd";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import styles from "./buttons.module.css";
 
 const SecondaryButton = (props) => {
@@ -34,8 +34,8 @@ const SecondaryButton = (props) => {
 
 export default SecondaryButton;
 
-SecondaryButton.propTypes = {
-  label: PropTypes.string,
-  onPress: PropTypes.func,
-  arrowIcon: PropTypes.bool,
-};
+// SecondaryButton.propTypes = {
+//   label: PropTypes.string,
+//   onPress: PropTypes.func,
+//   arrowIcon: PropTypes.bool,
+// };
