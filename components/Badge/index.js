@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 const Badge = (props) => {
   return (
     <>
@@ -22,3 +24,7 @@ const Badge = (props) => {
 };
 
 export default Badge;
+
+Badge.propTypes = {
+  label: PropTypes.string,
+};

@@ -1,5 +1,5 @@
 const { Table, Button } = require("antd");
-// import PropTypes from "prop-types";
+import PropTypes from "prop-types";
 import styles from "./page.module.css";
 
 const ArkTable = (props) => {
@@ -61,13 +61,13 @@ const ArkTable = (props) => {
 
 export default ArkTable;
 
-// ArkTable.propTypes = {
-//   title: PropTypes.string,
-//   hideTitle: PropTypes.bool,
-//   columnData: PropTypes.array,
-//   rowData: PropTypes.array,
-//   emptylistAsButton: PropTypes.bool,
-//   emptylistAsText: PropTypes.bool,
-//   localeLabel: PropTypes.string,
-//   localeOnClick: PropTypes.func,
-// };
+ArkTable.propTypes = {
+  title: PropTypes.string,
+  hideTitle: PropTypes.bool,
+  columnData: PropTypes.array,
+  rowData: PropTypes.array,
+  emptylistAsButton: PropTypes.bool,
+  emptylistAsText: PropTypes.bool,
+  localeLabel: PropTypes.string,
+  localeOnClick: PropTypes.func,
+};

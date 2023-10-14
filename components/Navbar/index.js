@@ -6,12 +6,19 @@ import { BellFilled, CaretRightFilled } from "@ant-design/icons";
 import AvatarBadge from "@/components/Badge";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
+import PropTypes from "prop-types";
+import { logoutUser } from "@/lib/helper";
 
 const Navbar = (props) => {
   const pathname = usePathname();
   const router = useRouter();
 
   const { showPages = false, showUserActions = false } = props;
+
+  const logout = () => {
+    logoutUser();
+    router.push("/");
+  };
 
   return (
     <>
@@ -64,9 +71,15 @@ const Navbar = (props) => {
             </div>
             <Popover
               showArrow={true}
-              content={<span>Logout</span>}
+              content={
+                <div
+                  style={{ padding: "0 30px", cursor: "pointer" }}
+                  onClick={logout}
+                >
+                  Logout
+                </div>
+              }
               trigger="click"
-              overlayInnerStyle={{ padding: "10px 30px" }}
             >
               <div
                 style={{
@@ -88,3 +101,8 @@ const Navbar = (props) => {
 };
 
 export default Navbar;
+
+Navbar.propTypes = {
+  showPages: PropTypes.bool,
+  showUserActions: PropTypes.bool,
+};

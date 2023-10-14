@@ -33,13 +33,13 @@ export default function Home() {
 
           <SecondaryButton
             label="Asset Owner"
-            onPress={() => router.push("/ao/dashboard")}
+            onPress={() => router.push("/login")}
             arrowIcon
           />
 
           <SecondaryButton
             label="Relationship Manager"
-            onPress={() => router.push("/rm/dashboard")}
+            onPress={() => router.push("/login")}
             arrowIcon
           />
 
