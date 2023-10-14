@@ -234,7 +234,7 @@ export default function SignIn() {
         style={{ textAlign: "center" }}
         centered
         footer={[
-          <div style={{ textAlign: "center" }}>
+          <div style={{ textAlign: "center" }} key="modal_footer_1">
             <PrimaryButtons label="Submit" onPress={handleInvestAmountSubmit} />
           </div>,
         ]}
@@ -262,7 +262,7 @@ export default function SignIn() {
         style={{ textAlign: "center" }}
         centered
         footer={[
-          <div style={{ textAlign: "center" }}>
+          <div style={{ textAlign: "center" }} key="modal_footer_2">
             <PrimaryButtons
               label="Close"
               onPress={() => setAlertModalOpen(false)}
