@@ -108,8 +108,8 @@ const ValidateAsset = () => {
             <div className={styles.progressIcons}>
               <ArkBadge label="2" />
               <span>
-                asdfasdfa <br />
-                asdfasdf{" "}
+                Application <br />
+                <span>asdfasdf</span>
               </span>
             </div>
             <div className={[styles.progressIcons, styles.lastElem].join(" ")}>

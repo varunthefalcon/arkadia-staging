@@ -2,6 +2,8 @@ import { ConfigProvider } from "antd";
 import "./globals.css";
 import { Frank_Ruhl_Libre, Mulish } from "next/font/google";
 import StyledComponentsRegistry from "../lib/AntdRegistry";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const frank_Ruhl_Libre = Frank_Ruhl_Libre({
   weight: ["variable"],
@@ -26,6 +28,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${frank_Ruhl_Libre.className} ${mulish.className} `}>
+        <ToastContainer />
         <ConfigProvider
           theme={{
             token: {

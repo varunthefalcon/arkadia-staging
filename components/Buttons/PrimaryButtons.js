@@ -1,19 +1,30 @@
 import Image from "next/image";
-import { Button } from "antd";
+import { Button, ConfigProvider } from "antd";
 import PropTypes from "prop-types";
-import styles from "./buttons.module.css";
 
 const PrimaryButtons = (props) => {
-  const { arrowIcon = false, label = "", onPress = () => {} } = props;
+  const {
+    arrowIcon = false,
+    label = "",
+    onPress = () => {},
+    disabled = false,
+    loading = false,
+    ...rest
+  } = props;
 
   return (
     <>
       <Button
         onClick={onPress}
-        style={{ backgroundColor: "#1027B8", borderRadius: "2px" }}
+        disabled={disabled}
+        loading={loading}
+        style={
+          disabled ? {} : { backgroundColor: "#1027B8", borderRadius: "2px" }
+        }
         type="primary"
+        {...rest}
       >
-        <span style={{ color: "white" }}>
+        <span>
           {label}
           {arrowIcon && (
             <Image
@@ -37,4 +48,6 @@ PrimaryButtons.propTypes = {
   label: PropTypes.string,
   onPress: PropTypes.func,
   arrowIcon: PropTypes.bool,
+  disabled: PropTypes.bool,
+  loading: PropTypes.bool,
 };

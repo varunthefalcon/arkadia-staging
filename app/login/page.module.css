@@ -43,7 +43,7 @@
 }
 
 .landing_stat_wrapper {
-  margin-top: 64px;
+  margin-top: 40px;
   margin-right: 30px;
 }
 
@@ -67,6 +67,7 @@
   padding: 8px 16px !important;
   height: 40px !important;
   margin-right: 25px;
+  margin-bottom: 15px;
   border-radius: 2px;
   background-color: var(--brand-color) !important;
   color: #f8f8fd !important;

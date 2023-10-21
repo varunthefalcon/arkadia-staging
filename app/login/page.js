@@ -10,6 +10,9 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { setUserInfo } from "@/lib/helper";
+import { URL_LOGIN } from "@/constants/config";
+import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
+import { toast } from "react-toastify";
 
 export default function SignIn() {
   const [username, setUsername] = useState("");
@@ -21,7 +24,7 @@ export default function SignIn() {
     e.preventDefault();
 
     const config = {
-      url: "http://defi.ap-southeast-1.elasticbeanstalk.com:9002/defi/api/v1/customer/login",
+      url: URL_LOGIN,
       method: "POST",
       data: {
         userName: username,
@@ -33,18 +36,19 @@ export default function SignIn() {
     try {
       setAPILoading(true);
       const p = await axios(config);
-      console.log(p);
-
       setUserInfo(p.data);
+      toast.success(`Welcome back ${p.data.firstName || p.data.userName}!`);
 
       if (p.data.customerType === "AO") {
+        router.push("/ao/dashboard");
+      } else if (p.data.customerType === "CRO") {
         router.push("/ao/dashboard");
       } else if (p.data.customerType === "RM") {
         router.push("/rm/dashboard");
       }
     } catch (error) {
       console.log(error);
-      alert("Something went wrong. Please check credentials");
+      toast.error("Incorrect! Please check your credentials!");
     } finally {
       setAPILoading(false);
     }
@@ -100,6 +104,7 @@ export default function SignIn() {
             >
               <Input
                 onChange={(e) => setUsername(e.target.value)}
+                placeholder="Enter your email address"
                 value={username}
               />
             </Form.Item>
@@ -114,24 +119,26 @@ export default function SignIn() {
               ]}
             >
               <Input.Password
+                placeholder="Enter your password"
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
               />
             </Form.Item>
 
-            <Button
+            <PrimaryButtons
               loading={apiLoading}
               htmlType="submit"
               className={styles.login_buttons}
               type="primary"
-              onClick={handleSubmit}
-            >
-              <span>Login</span>
-            </Button>
+              onPress={handleSubmit}
+              label={"Login"}
+              block={true}
+            ></PrimaryButtons>
 
-            <Button className={styles.login_buttons_ghost} type="primary">
-              <span>Forgot Password</span>
-            </Button>
+            <p>
+              Don’t have an account?{" "}
+              <span style={{ color: "#1027B8" }}>Sign Up</span>
+            </p>
           </Form>
           <div style={{ display: "flex" }}>
             <div className={styles.landing_stat_wrapper}>

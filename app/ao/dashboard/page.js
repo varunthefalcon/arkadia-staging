@@ -6,8 +6,12 @@ import styles from "./page.module.css";
 import { Input, Checkbox } from "antd";
 import ArkTable from "@/components/tables";
 import Navbar from "@/components/Navbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
+import { useRouter } from "next/navigation";
+import { URL_AO_LIST_ASSET } from "@/constants/config";
+import { getUserInfo } from "@/lib/helper";
+import axios from "axios";
 
 export default function SignIn() {
   const dataSource = [
@@ -34,7 +38,11 @@ export default function SignIn() {
 
   const [inputModalOpen, setInputModalOpen] = useState(false);
   const [alertModalOpen, setAlertModalOpen] = useState(false);
-  const [isInvestorApproved, setIsInvestorApproved] = useState(true);
+  const [listings, setListings] = useState([]);
+  const [isInvestorApproved, setIsInvestorApproved] = useState(false);
+
+  const router = useRouter();
+  const user = getUserInfo();
 
   const handleApplyToInvestor = () => {
     setInputModalOpen(true);
@@ -44,6 +52,28 @@ export default function SignIn() {
     setInputModalOpen(false);
     setAlertModalOpen(true);
   };
+
+  const getListings = async () => {
+    const config = {
+      url: URL_AO_LIST_ASSET,
+      method: "GET",
+      params: { customerId: 12 },
+      // user.customerId
+    };
+
+    try {
+      const resp = await axios(config);
+      console.log(resp);
+
+      console.log(resp.data); //setListings
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getListings();
+  }, []);
 
   return (
     <main>
@@ -150,14 +180,14 @@ export default function SignIn() {
                       <p className={styles.bannerLabel}>
                         Total Amount Invested
                       </p>
-                      <p className={styles.bannerValue}>$100, 000</p>
+                      <p className={styles.bannerValue}>$100,000</p>
                     </div>
                     <Image
                       src="/assets/AOInvestPic.png"
                       alt="Next.js subtitle"
                       style={{ paddingTop: "4px", marginLeft: "10px" }}
                       height={82}
-                      width={84}
+                      width={125}
                       priority
                     />
                   </div>
@@ -208,7 +238,9 @@ export default function SignIn() {
             rowData={[]}
             emptylistAsButton={true}
             localeOnClick={
-              isInvestorApproved ? () => {} : handleApplyToInvestor
+              isInvestorApproved
+                ? () => router.push("/asset/new")
+                : handleApplyToInvestor
             }
             localeLabel={
               isInvestorApproved

@@ -24,11 +24,13 @@ const Navbar = (props) => {
     <>
       <div className={styles.landing_header}>
         <div style={{ display: "flex" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             onClick={() => router.push("/")}
             src="/assets/nav_logo.png"
             className={styles.landing_header_img}
             width={160}
+            alt="nav logo"
             height={48}
           />
           {showPages && (
