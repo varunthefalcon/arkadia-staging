@@ -34,7 +34,7 @@ const NewAsset = () => {
       url: URL_CREATE_ASSET,
       method: "POST",
       data: {
-        customerId: 12, //user.customerId,
+        customerId: user.customerId,
         assetName: assetInfo.assetName,
         tokenId: 312,
         categoryId: 1,

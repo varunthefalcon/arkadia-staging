@@ -89,47 +89,64 @@ export default function SignIn() {
       <Navbar showPages={true} showUserActions={true} />
       {!isInvestorApproved && (
         <div
-          className={styles.banner}
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "50px",
+            position: "relative",
           }}
         >
-          <div>
-            <p className={styles.banner_title}>You can be an investor too</p>
-            <p className={styles.banner_sub_title}>
-              Get validated and start investing now.
-            </p>
-            <Button
-              className={styles.landing_button}
-              ghost
-              type="primary"
-              onClick={handleApplyToInvestor}
-            >
-              <span style={{ color: "#0a1767" }}>
-                Apply to be an Investor
-                <Image
-                  src="/assets/landing_arrow_subtitle.png"
-                  alt="Next.js subtitle"
-                  style={{ paddingTop: "4px", marginLeft: "10px" }}
-                  height={12}
-                  width={12}
-                  priority
-                />
-              </span>
-            </Button>
-          </div>
-          <div>
-            <Image
-              src="/assets/InvestPic.png"
-              alt="Next.js InvestPic"
-              style={{ paddingTop: "4px", marginLeft: "10px" }}
-              height={190}
-              width={425}
-              priority
-            />
+          <Image
+            src="/assets/InvestPic2.png"
+            alt="Next.js InvestPic"
+            style={{
+              position: "absolute",
+              height: "100%",
+              paddingTop: "4px",
+              right: 0,
+              marginLeft: "10px",
+            }}
+            width={window.screen.width / 1.4}
+            height={300}
+            priority
+          />
+          <div
+            className={styles.banner}
+            style={{
+              // position: "relative",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "50px",
+            }}
+          >
+            <div>
+              <p className={styles.banner_title}>You can be an investor too</p>
+              <p className={styles.banner_sub_title}>
+                Get validated and start investing now.
+              </p>
+              <Button
+                className={styles.landing_button}
+                ghost
+                type="primary"
+                onClick={handleApplyToInvestor}
+              >
+                <span style={{ color: "#0a1767" }}>
+                  Apply to be an Investor
+                  <Image
+                    src="/assets/landing_arrow_subtitle.png"
+                    alt="Next.js subtitle"
+                    style={{ paddingTop: "4px", marginLeft: "10px" }}
+                    height={12}
+                    width={12}
+                    priority
+                  />
+                </span>
+              </Button>
+            </div>
+            <div style={{ width: "425px" }}>
+              <p>&nbsp;</p>
+            </div>
+            {/* <div style={{  }}> */}
+
+            {/* </div> */}
           </div>
         </div>
       )}
@@ -173,18 +190,12 @@ export default function SignIn() {
                     backgroundColor: "white",
                     backgroundColor: "#0A1767",
                     flexGrow: "1",
+                    position: "relative",
                     color: "white",
                     padding: "32px",
                   }}
                 >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      flexWrap: "nowrap",
-                      justifyContent: "space-between",
-                    }}
-                  >
+                  <div>
                     <div>
                       <p className={styles.bannerLabel}>
                         Total Amount Invested
@@ -192,11 +203,18 @@ export default function SignIn() {
                       <p className={styles.bannerValue}>$100,000</p>
                     </div>
                     <Image
-                      src="/assets/AOInvestPic.png"
+                      src="/assets/InvestPic_2.png"
                       alt="Next.js subtitle"
-                      style={{ paddingTop: "4px", marginLeft: "10px" }}
-                      height={82}
-                      width={125}
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                        paddingTop: "4px",
+                        marginLeft: "10px",
+                      }}
+                      // height={82}
+                      // width={125}
+                      fill
                       priority
                     />
                   </div>
@@ -210,16 +228,10 @@ export default function SignIn() {
                     flexGrow: "1",
                     color: "white",
                     padding: "32px",
+                    position: "relative",
                   }}
                 >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      flexWrap: "nowrap",
-                      justifyContent: "space-between",
-                    }}
-                  >
+                  <div>
                     <div>
                       <p className={styles.bannerLabel}>
                         Active Loan Agreement
@@ -227,11 +239,16 @@ export default function SignIn() {
                       <p className={styles.bannerValue}>-</p>
                     </div>
                     <Image
-                      src="/assets/FinancePic.png"
+                      src="/assets/InvestPic_1.png"
                       alt="Next.js subtitle"
-                      style={{ paddingTop: "4px", marginLeft: "10px" }}
-                      height={82}
-                      width={84}
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                        paddingTop: "4px",
+                        marginLeft: "10px",
+                      }}
+                      fill
                       priority
                     />
                   </div>
@@ -242,7 +259,7 @@ export default function SignIn() {
           <p className={styles.pageTitle}>Hello, Asset Owner</p>
 
           <ArkTable
-            title="My Activity"
+            title="My Transaction"
             columnData={dataSource}
             rowData={[]}
             emptylistAsButton={true}
@@ -251,15 +268,17 @@ export default function SignIn() {
                 ? () => router.push("/asset/new")
                 : handleApplyToInvestor
             }
-            localeLabel={
+            rBtnOnClick={
               isInvestorApproved
-                ? "Create New Listing"
-                : "Digital Asset Onboarding Application"
+                ? () => router.push("/asset/new")
+                : handleApplyToInvestor
             }
+            rBtnLabel={"Digital Asset Onboarding Application"}
+            localeLabel={"Digital Asset Onboarding Application"}
           />
 
           <ArkTable
-            title="My Transaction"
+            title="My Investment"
             columnData={dataSource}
             rowData={[]}
             emptylistAsText={true}
@@ -300,6 +319,7 @@ export default function SignIn() {
           <Input
             name="amount"
             style={{ width: "70%" }}
+            required
             type="number"
             ref={investAmountRef}
           />

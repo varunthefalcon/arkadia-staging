@@ -1,6 +1,7 @@
 const { Table, Button } = require("antd");
 import PropTypes from "prop-types";
 import styles from "./page.module.css";
+import { PlusCircleFilled, PlusCircleOutlined } from "@ant-design/icons";
 
 const ArkTable = (props) => {
   const {
@@ -9,6 +10,8 @@ const ArkTable = (props) => {
     rowData = [],
     localeLabel = "",
     localeOnClick = () => {},
+    rBtnLabel = "",
+    rBtnOnClick = () => {},
     emptylistAsButton = false,
     hideTitle = false,
     emptylistAsText = false,
@@ -46,7 +49,21 @@ const ArkTable = (props) => {
           className={styles.tablesTitle}
           style={{ display: hideTitle ? "none" : "" }}
         >
-          {title}
+          <span>{title}</span>
+          {!!rBtnLabel && (
+            <Button
+              onClick={rBtnOnClick}
+              style={{
+                height: "25px",
+                fontSize: "12px",
+                fontWeight: "700",
+                color: "#1027B8",
+              }}
+              icon={<PlusCircleFilled style={{ color: "#1027B8" }} />}
+            >
+              {rBtnLabel}
+            </Button>
+          )}
         </div>
         <Table
           columns={columnData}
