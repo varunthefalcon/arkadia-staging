@@ -6,11 +6,11 @@ import styles from "./page.module.css";
 import { Input, Checkbox } from "antd";
 import ArkTable from "@/components/tables";
 import Navbar from "@/components/Navbar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
 import { useRouter } from "next/navigation";
 import { URL_AO_LIST_ASSET } from "@/constants/config";
-import { getUserInfo } from "@/lib/helper";
+import { getUserDetails, getUserInfo, setUserDetails } from "@/lib/helper";
 import axios from "axios";
 
 export default function SignIn() {
@@ -38,27 +38,34 @@ export default function SignIn() {
 
   const [inputModalOpen, setInputModalOpen] = useState(false);
   const [alertModalOpen, setAlertModalOpen] = useState(false);
+  const [investAmountSubmitFlag, setInvestAmountSubmitFlag] = useState(false);
   const [listings, setListings] = useState([]);
-  const [isInvestorApproved, setIsInvestorApproved] = useState(false);
 
   const router = useRouter();
   const user = getUserInfo();
+
+  const investAmountRef = useRef();
 
   const handleApplyToInvestor = () => {
     setInputModalOpen(true);
   };
 
   const handleInvestAmountSubmit = () => {
-    setInputModalOpen(false);
-    setAlertModalOpen(true);
+    setInvestAmountSubmitFlag(true);
+
+    setTimeout(() => {
+      setUserDetails("isInvestor", true);
+      setUserDetails("isInvestorAmount", investAmountRef.current.input.value);
+      setInputModalOpen(false);
+      setAlertModalOpen(true);
+    }, 2000);
   };
 
   const getListings = async () => {
     const config = {
       url: URL_AO_LIST_ASSET,
       method: "GET",
-      params: { customerId: 12 },
-      // user.customerId
+      params: { customerId: user.customerId },
     };
 
     try {
@@ -70,6 +77,8 @@ export default function SignIn() {
       console.log(error);
     }
   };
+
+  const isInvestorApproved = getUserDetails("isInvestor");
 
   useEffect(() => {
     getListings();
@@ -267,7 +276,11 @@ export default function SignIn() {
         centered
         footer={[
           <div style={{ textAlign: "center" }} key="modal_footer_1">
-            <PrimaryButtons label="Submit" onPress={handleInvestAmountSubmit} />
+            <PrimaryButtons
+              label="Submit"
+              onPress={handleInvestAmountSubmit}
+              loading={investAmountSubmitFlag}
+            />
           </div>,
         ]}
         open={inputModalOpen}
@@ -284,12 +297,17 @@ export default function SignIn() {
           <p style={{ textAlign: "start", marginLeft: "15%" }}>
             Investment Amount
           </p>
-          <Input name="amount" style={{ width: "70%" }} />
+          <Input
+            name="amount"
+            style={{ width: "70%" }}
+            type="number"
+            ref={investAmountRef}
+          />
         </label>
       </Modal>
 
       <Modal
-        title={<b>Application Submitted</b>}
+        title={<b>Congratulations!</b>}
         closable={true}
         style={{ textAlign: "center" }}
         centered
@@ -308,8 +326,8 @@ export default function SignIn() {
         width={450}
       >
         <p style={{ margin: "24px 0 32px 0" }}>
-          Once your application is approved, you will be able to activate
-          “Investor mode”.
+          You have activated <b>Investor mode</b>. Checkout marketplace and
+          start Investing in digital assets.
         </p>
       </Modal>
     </main>
