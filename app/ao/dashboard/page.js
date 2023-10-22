@@ -282,7 +282,7 @@ export default function SignIn() {
             columnData={dataSource}
             rowData={[]}
             emptylistAsText={true}
-            localeLabel="You have no transaction records."
+            localeLabel="You have no investments record."
           />
         </div>
       </div>

@@ -7,27 +7,60 @@ import { Alert, Checkbox, Col, Input, Row, Select } from "antd";
 import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
 import GhostButtons from "@/components/Buttons/GhostButtons";
 import axios from "axios";
-import { formatCurrency } from "@/lib/helper";
-import { URL_VIEW_ASSET } from "@/constants/config";
+import { formatCurrency, getUserInfo } from "@/lib/helper";
+import { URL_INITIATE_DEAL, URL_VIEW_ASSET } from "@/constants/config";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const ViewAsset = () => {
   const [assetInfo, setAssetInfo] = useState({ paymentTerms: {} });
   const [loading, setLoading] = useState(false);
 
-  const getAsset = async () => {
-    const url = new URL(window.location.href);
+  const router = useRouter();
+  const user = getUserInfo();
+  const url = new URL(window.location.href);
 
+  const getAsset = async () => {
     try {
       const config = {
         url: URL_VIEW_ASSET + url.searchParams.get("assetId"),
         method: "GET",
       };
-      setLoading(true);
       const resp = await axios(config);
 
       console.log(resp);
       setAssetInfo({ paymentTerms: {}, ...(resp.data || {}) });
     } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const initiateDeal = async () => {
+    try {
+      const config = {
+        method: "POST",
+        url: URL_INITIATE_DEAL,
+        data: {
+          assetId: url.searchParams.get("assetId"),
+          cashRichOfferId: 652,
+          interestRate: 6.0,
+          interestType: "Fixed",
+          duration: 1,
+          interestPayoutCycle: "Monthly",
+          loanAmount: 10000,
+        },
+      };
+      setLoading(true);
+      const resp = await axios(config);
+      toast.success(
+        "Loan Agreement Requested Successfully and sent for RM validation."
+      );
+      router.push("/marketplace");
+      console.log(resp);
+    } catch (error) {
+      toast.error("Something went wrong, try again later.");
       console.error(error);
     } finally {
       setLoading(false);
@@ -132,7 +165,8 @@ const ViewAsset = () => {
             />{" "}
             &nbsp;
             <PrimaryButtons
-              onPress={() => setPreviewMode(true)}
+              onPress={initiateDeal}
+              loading={loading}
               label="Request for Loan Agreement"
             />
           </div>
