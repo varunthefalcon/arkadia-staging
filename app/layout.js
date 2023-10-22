@@ -4,6 +4,7 @@ import { Frank_Ruhl_Libre, Mulish } from "next/font/google";
 import StyledComponentsRegistry from "../lib/AntdRegistry";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import AuthComp from "@/components/auth";
 
 const frank_Ruhl_Libre = Frank_Ruhl_Libre({
   weight: ["variable"],
@@ -36,7 +37,10 @@ export default function RootLayout({ children }) {
             },
           }}
         >
-          <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+          <StyledComponentsRegistry>
+            <AuthComp />
+            {children}
+          </StyledComponentsRegistry>
         </ConfigProvider>
       </body>
     </html>
