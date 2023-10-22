@@ -15,6 +15,7 @@ const ArkTable = (props) => {
     emptylistAsButton = false,
     hideTitle = false,
     emptylistAsText = false,
+    ...rest
   } = props;
 
   let additionalProps = {};
@@ -42,6 +43,8 @@ const ArkTable = (props) => {
       },
     };
   }
+
+  additionalProps = { ...additionalProps, ...rest };
   return (
     <>
       <div className={styles.tablesWrapper}>
@@ -69,6 +72,7 @@ const ArkTable = (props) => {
           columns={columnData}
           dataSource={rowData}
           {...additionalProps}
+          rowClassName={styles.pointer}
           pagination={{ position: ["none", "none"] }}
         />
       </div>

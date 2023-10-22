@@ -11,8 +11,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { URL_LIST_VALIDATED_ASSET } from "@/constants/config";
 import { formatCurrency } from "@/lib/helper";
+import { useRouter } from "next/navigation";
 
 export default function SignIn() {
+  const [listings, setListings] = useState([]);
+  const [apiFlag, setAPIFlag] = useState(false);
+  const navigate = useRouter();
+
   const dataSource = [
     {
       title: "Listing name",
@@ -48,9 +53,6 @@ export default function SignIn() {
       dataIndex: "interestRate",
     },
   ];
-
-  const [listings, setListings] = useState([]);
-  const [apiFlag, setAPIFlag] = useState(false);
 
   async function getListings() {
     try {
@@ -98,6 +100,13 @@ export default function SignIn() {
           <ArkTable
             title=""
             rowData={listings}
+            onRow={(record) => {
+              return {
+                onClick: () => {
+                  navigate.push("/asset/view?assetId=" + record.assetId);
+                },
+              };
+            }}
             hideTitle={true}
             columnData={dataSource}
           />

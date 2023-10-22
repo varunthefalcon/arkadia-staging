@@ -21,3 +21,7 @@
   justify-content: space-between;
   align-items: baseline;
 }
+
+.pointer {
+  cursor: pointer;
+}

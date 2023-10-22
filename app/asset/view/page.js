@@ -8,15 +8,18 @@ import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
 import GhostButtons from "@/components/Buttons/GhostButtons";
 import axios from "axios";
 import { formatCurrency } from "@/lib/helper";
+import { URL_VIEW_ASSET } from "@/constants/config";
 
 const ViewAsset = () => {
   const [assetInfo, setAssetInfo] = useState({ paymentTerms: {} });
   const [loading, setLoading] = useState(false);
 
   const getAsset = async () => {
+    const url = new URL(window.location.href);
+
     try {
       const config = {
-        url: "http://defi.ap-southeast-1.elasticbeanstalk.com:9002/defi/api/v1/asset/fetchAsset/352",
+        url: URL_VIEW_ASSET + url.searchParams.get("assetId"),
         method: "GET",
       };
       setLoading(true);
