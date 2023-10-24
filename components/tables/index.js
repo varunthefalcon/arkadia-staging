@@ -46,37 +46,35 @@ const ArkTable = (props) => {
 
   additionalProps = { ...additionalProps, ...rest };
   return (
-    <>
-      <div className={styles.tablesWrapper}>
-        <div
-          className={styles.tablesTitle}
-          style={{ display: hideTitle ? "none" : "" }}
-        >
-          <span>{title}</span>
-          {!!rBtnLabel && (
-            <Button
-              onClick={rBtnOnClick}
-              style={{
-                height: "25px",
-                fontSize: "12px",
-                fontWeight: "700",
-                color: "#1027B8",
-              }}
-              icon={<PlusCircleFilled style={{ color: "#1027B8" }} />}
-            >
-              {rBtnLabel}
-            </Button>
-          )}
-        </div>
-        <Table
-          columns={columnData}
-          dataSource={rowData}
-          {...additionalProps}
-          rowClassName={styles.pointer}
-          pagination={{ position: ["none", "none"] }}
-        />
+    <div className={styles.tablesWrapper} key={title}>
+      <div
+        className={styles.tablesTitle}
+        style={{ display: hideTitle ? "none" : "" }}
+      >
+        <span>{title}</span>
+        {!!rBtnLabel && (
+          <Button
+            onClick={rBtnOnClick}
+            style={{
+              height: "25px",
+              fontSize: "12px",
+              fontWeight: "700",
+              color: "#1027B8",
+            }}
+            icon={<PlusCircleFilled style={{ color: "#1027B8" }} />}
+          >
+            {rBtnLabel}
+          </Button>
+        )}
       </div>
-    </>
+      <Table
+        columns={columnData}
+        dataSource={rowData}
+        {...additionalProps}
+        rowClassName={styles.pointer}
+        pagination={{ position: ["none", "none"] }}
+      />
+    </div>
   );
 };
 

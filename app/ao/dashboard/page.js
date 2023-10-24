@@ -10,36 +10,59 @@ import { useEffect, useRef, useState } from "react";
 import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
 import { useRouter } from "next/navigation";
 import { URL_AO_LIST_ASSET } from "@/constants/config";
-import { getUserDetails, getUserInfo, setUserDetails } from "@/lib/helper";
+import {
+  formatCurrency,
+  getUserDetails,
+  getUserInfo,
+  setUserDetails,
+} from "@/lib/helper";
 import axios from "axios";
 
 export default function SignIn() {
   const dataSource = [
     {
       title: "Listing name",
-      dataIndex: "name",
+      dataIndex: "assetName",
       sorter: (a, b) => a.name - b.name,
     },
     {
+      title: "Asset Price",
+      dataIndex: "assetPrice",
+      sorter: (a, b) => a.date - b.date,
+      render: (text) => formatCurrency(text),
+    },
+    {
       title: "Category",
-      dataIndex: "category",
+      dataIndex: "categoryName",
       sorter: (a, b) => a.category - b.category,
     },
     {
-      title: "Date",
-      dataIndex: "date",
+      title: "Listed Date",
+      dataIndex: "createdOn",
+      render: (text) => <span>{text.split("T")[0]}</span>,
       sorter: (a, b) => a.date - b.date,
     },
     {
+      title: "Loan Amount",
+      dataIndex: "loanRequested",
+      render: (text) => formatCurrency(text),
+    },
+    {
+      title: "Tenure",
+      dataIndex: "tenure",
+      render: (text) => <span>{text * 12} months</span>,
+    },
+    {
       title: "Status",
-      dataIndex: "Status",
+      dataIndex: "eligibility",
+      render: (text) => <span>{text === "true" ? "Approved" : "Pending"}</span>,
     },
   ];
 
   const [inputModalOpen, setInputModalOpen] = useState(false);
   const [alertModalOpen, setAlertModalOpen] = useState(false);
   const [investAmountSubmitFlag, setInvestAmountSubmitFlag] = useState(false);
-  const [listings, setListings] = useState([]);
+  const [assetRows, setAssetRows] = useState([]);
 
   const router = useRouter();
   const user = getUserInfo();
@@ -70,9 +93,14 @@ export default function SignIn() {
 
     try {
       const resp = await axios(config);
-      console.log(resp);
-
-      console.log(resp.data); //setListings
+      setAssetRows(
+        resp.data.map((e) => ({
+          ...e,
+          tenure: e.paymentTerms.duration,
+          interestRate: e.paymentTerms.rMInterestRate,
+          categoryName: e.category.categoryName,
+        }))
+      );
     } catch (error) {
       console.log(error);
     }
@@ -160,7 +188,7 @@ export default function SignIn() {
         <div
           style={{
             width: "100%",
-            maxWidth: "750px",
+            maxWidth: "900px",
           }}
         >
           {isInvestorApproved && (
@@ -261,7 +289,8 @@ export default function SignIn() {
           <ArkTable
             title="My Transaction"
             columnData={dataSource}
-            rowData={[]}
+            key="transaction_table"
+            rowData={assetRows}
             emptylistAsButton={true}
             localeOnClick={
               isInvestorApproved

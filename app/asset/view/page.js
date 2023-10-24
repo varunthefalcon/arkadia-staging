@@ -2,7 +2,7 @@
 
 import Navbar from "@/components/Navbar";
 import styles from "./page.module.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Alert, Checkbox, Col, Input, Row, Select } from "antd";
 import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
 import GhostButtons from "@/components/Buttons/GhostButtons";
@@ -11,6 +11,7 @@ import { formatCurrency, getUserInfo } from "@/lib/helper";
 import { URL_INITIATE_DEAL, URL_VIEW_ASSET } from "@/constants/config";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 const ViewAsset = () => {
   const [assetInfo, setAssetInfo] = useState({ paymentTerms: {} });
@@ -18,12 +19,16 @@ const ViewAsset = () => {
 
   const router = useRouter();
   const user = getUserInfo();
-  const url = new URL(window.location.href);
+  const url = useSearchParams();
 
-  const getAsset = async () => {
+  const assetId = url.get("assetId");
+
+  const getAsset = useCallback(async () => {
+    if (!assetId) return;
+
     try {
       const config = {
-        url: URL_VIEW_ASSET + url.searchParams.get("assetId"),
+        url: URL_VIEW_ASSET + assetId,
         method: "GET",
       };
       const resp = await axios(config);
@@ -35,7 +40,7 @@ const ViewAsset = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [assetId]);
 
   const initiateDeal = async () => {
     try {
@@ -43,13 +48,13 @@ const ViewAsset = () => {
         method: "POST",
         url: URL_INITIATE_DEAL,
         data: {
-          assetId: url.searchParams.get("assetId"),
+          assetId: url.get("assetId"),
           cashRichOfferId: 652,
-          interestRate: 6.0,
-          interestType: "Fixed",
-          duration: 1,
-          interestPayoutCycle: "Monthly",
-          loanAmount: 10000,
+          interestRate: assetInfo.paymentTerms.rMInterestRate,
+          interestType: assetInfo.paymentTerms.rMInterestType,
+          duration: assetInfo.paymentTerms.duration,
+          interestPayoutCycle: assetInfo.paymentTerms.rMInterestPayoutCycle,
+          loanAmount: assetInfo.loanRequested,
         },
       };
       setLoading(true);
@@ -69,7 +74,7 @@ const ViewAsset = () => {
 
   useEffect(() => {
     getAsset();
-  }, []);
+  }, [getAsset]);
 
   return (
     <>
@@ -83,25 +88,25 @@ const ViewAsset = () => {
           <Row gutter={20}>
             <Col span={12}>
               <label className={styles.label}>
-                Account ID*
-                <p>{assetInfo.accountID || "#132455454"}</p>
+                Account ID
+                <p>{assetInfo.accountID || "N/A"}</p>
               </label>
             </Col>
             <Col span={12}>
               <label className={styles.label}>
-                Asset Name*
+                Asset Name
                 <p>{assetInfo.assetName}</p>
               </label>
             </Col>
             <Col span={12}>
               <label className={styles.label}>
-                Asset Type*
+                Asset Type
                 <p>{assetInfo.categoryId}</p>
               </label>
             </Col>
             <Col span={12}>
               <label className={styles.label}>
-                Asset Value*
+                Asset Value
                 <p>{formatCurrency(assetInfo.assetPrice)}</p>
               </label>
             </Col>
@@ -111,20 +116,20 @@ const ViewAsset = () => {
           <Row gutter={20}>
             <Col span={12}>
               <label className={styles.label}>
-                Desired Loan Amount*
+                Desired Loan Amount
                 <p>{assetInfo.loanRequested}</p>
               </label>
             </Col>
             <Col span={12}>
               <label className={styles.label}>
-                Loan Tenure*
+                Loan Tenure
                 <p>{assetInfo.paymentTerms.duration}</p>
               </label>
             </Col>
 
             <Col span={12}>
               <label className={styles.label}>
-                Interest Rates Offered*
+                Interest Rates Offered
                 <p className={styles.highlight}>
                   {assetInfo.paymentTerms.rMInterestRate}%
                 </p>
@@ -133,7 +138,7 @@ const ViewAsset = () => {
 
             <Col span={12}>
               <label className={styles.label}>
-                Start date*
+                Start date
                 <p className={styles.highlight}>
                   {assetInfo.paymentTerms.startDate || "N/A"}
                 </p>
@@ -141,7 +146,7 @@ const ViewAsset = () => {
             </Col>
             <Col span={12}>
               <label className={styles.label}>
-                Final Maturity date*
+                Final Maturity date
                 <p className={styles.highlight}>
                   {assetInfo.paymentTerms.endDate || "N/A"}
                 </p>
@@ -150,7 +155,7 @@ const ViewAsset = () => {
 
             <Col span={12}>
               <label className={styles.label}>
-                Validated By*
+                Validated By
                 <p className={styles.highlight}>
                   {assetInfo.paymentTerms.manager || "N/A"}
                 </p>

@@ -7,11 +7,15 @@ import AvatarBadge from "@/components/Badge";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
-import { logoutUser } from "@/lib/helper";
+import { getUserInfo, logoutUser } from "@/lib/helper";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Navbar = (props) => {
+  const [notifications, setNotifications] = useState([]);
   const pathname = usePathname();
   const router = useRouter();
+  const user = getUserInfo();
 
   const { showPages = false, showUserActions = false } = props;
 
@@ -19,6 +23,27 @@ const Navbar = (props) => {
     logoutUser();
     router.push("/");
   };
+
+  const getNotification = async () => {
+    if (!user.customerId) return;
+
+    try {
+      const config = {
+        method: "GET",
+        url:
+          "http://defi.ap-southeast-1.elasticbeanstalk.com:9002/defi/api/v1/notification/fetchcustomernotifications?customerId=" +
+          user.customerId,
+      };
+      const resp = await axios(config);
+      setNotifications(resp.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getNotification();
+  }, []);
 
   return (
     <>
@@ -66,11 +91,25 @@ const Navbar = (props) => {
               gap: "20px",
             }}
           >
-            <div style={{ margin: "0 20px" }}>
-              <Badge size="small" count={2}>
-                <BellFilled style={{ fontSize: "24px" }} />
-              </Badge>
-            </div>
+            <Popover
+              showArrow={true}
+              overlayInnerStyle={{ padding: 0 }}
+              content={
+                <div style={{ padding: "0", width: "280px" }}>
+                  <b>Notifications{`(${notifications.length})`}</b>
+                  <hr></hr>
+                  <br />
+                  <p style={{ textAlign: "center" }}>You are all caught up!</p>
+                </div>
+              }
+              trigger="click"
+            >
+              <div style={{ margin: "0 20px" }}>
+                <Badge size="small" count={notifications.length}>
+                  <BellFilled style={{ fontSize: "24px", cursor: "pointer" }} />
+                </Badge>
+              </div>
+            </Popover>
             <Popover
               showArrow={true}
               content={

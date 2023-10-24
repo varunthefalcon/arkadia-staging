@@ -13,6 +13,11 @@ export const URL_VIEW_ASSET = URL_BASE + "/asset/fetchAsset/";
 
 export const URL_INITIATE_DEAL = URL_BASE + "/deal/initiatedeal";
 
+export const URL_RM_PENDING_ASSET =
+  URL_BASE + "/rm/fetchValidationPendingAssets";
+
+export const URL_GET_TOKENIZED_ASSET = URL_BASE + "/tokenizedAssets";
+
 export const BRAND_COLOR = "#1027b8";
 export const USER_INFO_LS = "user_information";
 export const CURRENCY_SYMBOL = "$";

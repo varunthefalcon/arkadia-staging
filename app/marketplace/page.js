@@ -26,7 +26,7 @@ export default function SignIn() {
     },
     {
       title: "Category",
-      dataIndex: "categoryId",
+      dataIndex: "categoryName",
       sorter: (a, b) => a.category - b.category,
     },
     {
@@ -35,22 +35,26 @@ export default function SignIn() {
       sorter: (a, b) => a.date - b.date,
       render: (text) => formatCurrency(text),
     },
-    // {
-    //   title: "Listed Date",
-    //   dataIndex: "listedDate",
-    //   sorter: (a, b) => a.date - b.date,
-    // },
+    {
+      title: "Listed Date",
+      dataIndex: "createdOn",
+      render: (text) => <span>{text.split("T")[0]}</span>,
+      sorter: (a, b) => a.date - b.date,
+    },
     {
       title: "Loan Amount",
       dataIndex: "loanRequested",
+      render: (text) => formatCurrency(text),
     },
     {
       title: "Tenure",
       dataIndex: "tenure",
+      render: (text) => <span>{text * 12} months</span>,
     },
     {
       title: "Return (P.A)",
       dataIndex: "interestRate",
+      render: (text) => <span>{text}%</span>,
     },
   ];
 
@@ -67,6 +71,7 @@ export default function SignIn() {
           ...e,
           tenure: e.paymentTerms.duration,
           interestRate: e.paymentTerms.rMInterestRate,
+          categoryName: e.category.categoryName,
         }))
       );
     } catch (error) {
@@ -100,6 +105,7 @@ export default function SignIn() {
           <ArkTable
             title=""
             rowData={listings}
+            rowKey={"assetId"}
             onRow={(record) => {
               return {
                 onClick: () => {

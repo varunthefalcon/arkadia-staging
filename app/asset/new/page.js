@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Checkbox, Col, Input, Row, Select } from "antd";
 import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
 import GhostButtons from "@/components/Buttons/GhostButtons";
-import { URL_CREATE_ASSET } from "@/constants/config";
+import { URL_CREATE_ASSET, URL_GET_TOKENIZED_ASSET } from "@/constants/config";
 import { getUserInfo, theme } from "@/lib/helper";
 import { Button, ConfigProvider } from "antd";
 import axios from "axios";
@@ -30,30 +30,49 @@ const NewAsset = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // const config1 = {
+    //   url: URL_GET_TOKENIZED_ASSET,
+    //   method: "GET",
+    //   params: {
+    //     customerId: user.customerId,
+    //   },
+    // };
+
+    const config2 = {
+      url: "http://defi.ap-southeast-1.elasticbeanstalk.com:9002/defi/api/v1/hedera/createAsset",
+      method: "POST",
+      data: {
+        customerId: user.customerId,
+        assetName: assetInfo.assetName,
+      },
+    };
+
     const config = {
       url: URL_CREATE_ASSET,
       method: "POST",
       data: {
         customerId: user.customerId,
         assetName: assetInfo.assetName,
-        tokenId: 312,
+        // nftTokenId: 0,
         categoryId: 1,
-        loanRequested: assetInfo.loanRequested,
-        assetPrice: assetInfo.assetPrice,
+        loanRequested: parseInt(assetInfo.loanRequested),
+        assetPrice: parseInt(assetInfo.assetPrice),
         colleteralizationOffer: 30,
         paymentTerms: {
-          duration: assetInfo.loanTenure,
+          duration: parseInt(assetInfo.loanTenure),
         },
       },
     };
 
     try {
       setLoading(true);
-      await axios(config);
+      const resp = await axios(config2);
 
-      toast.success("Asset created and sent for approval.");
+      console.log(resp);
 
-      router.push("/ao/dashboard");
+      // toast.success("Asset created and sent for approval.");
+
+      // router.push("/ao/dashboard");
     } catch (error) {
       console.error(error);
     } finally {
@@ -140,7 +159,7 @@ const NewAsset = () => {
                   <label className={styles.label}>
                     Loan Tenure*
                     {previewMode ? (
-                      <p>Tenure</p>
+                      <p>{assetInfo.loanTenure} months</p>
                     ) : (
                       <Select
                         style={{ display: "block" }}
@@ -148,15 +167,19 @@ const NewAsset = () => {
                         onChange={(e) =>
                           setAssetInfo((info) => ({
                             ...info,
-                            loanTenure: e.value,
+                            loanTenure: e,
                           }))
                         }
                       >
-                        <Select.Option value="5">5 years</Select.Option>
-                        <Select.Option value="6">6 years</Select.Option>
-                        <Select.Option value="7">7 years</Select.Option>
-                        <Select.Option value="8">8 years</Select.Option>
-                        <Select.Option value="9">9+ years</Select.Option>
+                        <Select.Option value="24">2 years</Select.Option>
+                        <Select.Option value="36">3 years</Select.Option>
+                        <Select.Option value="48">4 years</Select.Option>
+                        <Select.Option value="60">5 years</Select.Option>
+                        <Select.Option value="72">6 years</Select.Option>
+                        <Select.Option value="84">7 years</Select.Option>
+                        <Select.Option value="96">8 years</Select.Option>
+                        <Select.Option value="108">9 years</Select.Option>
+                        <Select.Option value="120">10 years</Select.Option>
                       </Select>
                     )}
                   </label>
