@@ -10,11 +10,14 @@ import ArkTable from "@/components/tables";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { URL_LIST_VALIDATED_ASSET } from "@/constants/config";
-import { formatCurrency } from "@/lib/helper";
+import { formatCurrency, formatDate } from "@/lib/helper";
 import { useRouter } from "next/navigation";
+import FilterInput from "@/components/FilterButton/FilterInput";
+import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
 
 export default function SignIn() {
   const [listings, setListings] = useState([]);
+  const [assetTypes, setAssetTypes] = useState([]);
   const [apiFlag, setAPIFlag] = useState(false);
   const navigate = useRouter();
 
@@ -44,7 +47,7 @@ export default function SignIn() {
     {
       title: "Loan Amount",
       dataIndex: "loanRequested",
-      render: (text) => formatCurrency(text),
+      render: (text) => formatCurrency(loanRequested),
     },
     {
       title: "Tenure",
@@ -66,14 +69,15 @@ export default function SignIn() {
       };
       setAPIFlag(true);
       const resp = await axios(config);
-      setListings(
-        resp.data.map((e) => ({
-          ...e,
-          tenure: e.paymentTerms.duration,
-          interestRate: e.paymentTerms.rMInterestRate,
-          categoryName: e.category.categoryName,
-        }))
-      );
+      const allListings = resp.data.map((e) => ({
+        ...e,
+        tenure: e.paymentTerms.duration,
+        interestRate: e.paymentTerms.rMInterestRate,
+        categoryName: e.category.categoryName,
+      }));
+      setListings(allListings);
+      const uniqueTypes = new Set(allListings.map((e) => e.categoryName));
+      setAssetTypes([...uniqueTypes]);
     } catch (error) {
       console.error(error);
     } finally {
@@ -92,32 +96,121 @@ export default function SignIn() {
         style={{
           display: "flex",
           justifyContent: "center",
+          backgroundColor: "#0A1767",
+          color: "white",
+          position: "relative",
         }}
       >
+        <Image
+          src="/assets/marketplace_waves.png"
+          alt="Next.js subtitle"
+          style={{
+            position: "absolute",
+            clipPath: "inset(50px 0 0 0)",
+            top: -50,
+            right: 0,
+            paddingTop: "4px",
+            marginLeft: "10px",
+            overflow: "hidden",
+          }}
+          height={500}
+          width={window.screen.availWidth}
+          priority
+        />
         <div
           style={{
             width: "100%",
-            maxWidth: "750px",
+            maxWidth: "940px",
           }}
         >
-          <p className={styles.pageTitle}>Marketplace</p>
+          <p className={styles.pageTitle}>
+            Secure loans <br /> Connect investors
+          </p>
 
-          <ArkTable
-            title=""
-            rowData={listings}
-            rowKey={"assetId"}
-            onRow={(record) => {
-              return {
-                onClick: () => {
-                  navigate.push("/asset/view?assetId=" + record.assetId);
-                },
-              };
-            }}
-            hideTitle={true}
-            columnData={dataSource}
-          />
+          <p className={styles.pageSubTitle}>
+            Bridge opportunity and capital by using assets as collateral to
+            connect
+            <br /> professional investors with the resources you need
+          </p>
+
+          <br />
+
+          <FilterInput assetTypes={assetTypes} />
+
+          <b>Featured Assets</b>
+          <br />
+          <br />
+          {listings.map((item) => (
+            <AssetItem key={item.assetId} asset={item} />
+          ))}
         </div>
       </div>
     </main>
   );
 }
+
+const AssetItem = ({ asset = {} }) => {
+  return (
+    <>
+      <div
+        style={{
+          backgroundColor: "white",
+          border: "8px",
+          padding: "20px",
+          marginBottom: "20px",
+          color: "black",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <VerticalLabelValues
+            label={asset.categoryName}
+            value={asset.assetName}
+          />
+          <div>
+            <PrimaryButtons
+              label="View"
+              onPress={() => {
+                navigate.push("/asset/view?assetId=" + asset.assetId);
+              }}
+            />
+          </div>
+        </div>
+        <hr style={{ margin: "10px  0" }} />
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <VerticalLabelValues
+            label="Loan Amount"
+            value={formatCurrency(asset.loanRequested)}
+          />
+          <VerticalLabelValues
+            label="Returns"
+            value={asset.interestRate + "%"}
+          />
+          <VerticalLabelValues
+            label="Tenure"
+            value={asset.tenure * 12 + " months"}
+          />
+          <VerticalLabelValues
+            label="Listed Date"
+            value={formatDate(asset?.createdOn)}
+          />
+        </div>
+      </div>
+    </>
+  );
+};
+
+const VerticalLabelValues = ({ label = "", value = "" }) => {
+  return (
+    <div>
+      <p className={styles.label}>{label}</p>
+      <p className={styles.value}>{value}</p>
+    </div>
+  );
+};

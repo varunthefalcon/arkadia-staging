@@ -1,19 +1,26 @@
 import { ConfigProvider } from "antd";
 import "./globals.css";
-import { Frank_Ruhl_Libre, Mulish } from "next/font/google";
+import { Frank_Ruhl_Libre, Mulish, Inter } from "next/font/google";
 import StyledComponentsRegistry from "../lib/AntdRegistry";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import AuthComp from "@/components/auth";
 
-const frank_Ruhl_Libre = Frank_Ruhl_Libre({
+export const frank_Ruhl_Libre = Frank_Ruhl_Libre({
   weight: ["variable"],
   style: ["normal"],
   subsets: ["latin"],
   variable: "--font-frank",
 });
 
-const mulish = Mulish({
+export const inter = Inter({
+  weight: ["variable"],
+  style: ["normal"],
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+
+export const mulish = Mulish({
   weight: ["variable"],
   style: ["normal"],
   subsets: ["latin"],
@@ -28,7 +35,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${frank_Ruhl_Libre.className} ${mulish.className} `}>
+      <body
+        className={`${frank_Ruhl_Libre.className} ${mulish.className} ${inter.className}`}
+      >
         <ToastContainer />
         <ConfigProvider
           theme={{

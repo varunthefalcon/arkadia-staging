@@ -1,10 +1,38 @@
 .pageTitle {
   font-family: --font-frank;
-  font-size: 26px;
-  font-weight: 700;
-  line-height: 29px;
-  letter-spacing: 0em;
-  text-align: left;
-  margin-top: 48px;
-  margin-bottom: 32px;
+  font-size: 53px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 110%;
+  padding-top: 5rem;
+}
+
+.pageSubTitle {
+  font-family: var(--font-mulish);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 170%;
+  margin-top: 25px;
+  margin-bottom: 35px;
+}
+
+.label {
+  color: #696d86;
+  font-family: var(--font-inter);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
+  margin-bottom: 5px;
+  width: 150px;
+}
+
+.value {
+  color: #050c36;
+  font-family: var(--font-inter);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 140%;
 }

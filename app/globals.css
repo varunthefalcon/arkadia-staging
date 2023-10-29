@@ -86,3 +86,17 @@ th {
 .ant-table-column-sorter-inner > .active {
   color: #1027b8 !important;
 }
+
+.filter_input .ant-select-selection-item {
+  background-color: white !important  ;
+  color: black !important  ;
+}
+
+.filter_input .ant-input-search-button {
+  background-color: #0a1767 !important  ;
+  border-color: #fff !important  ;
+}
+
+.filter_input .ant-input-group-addon {
+  background-color: white !important  ;
+}
