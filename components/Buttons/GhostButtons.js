@@ -15,7 +15,15 @@ const theme = {
 };
 
 const GhostButtons = (props) => {
-  const { arrowIcon = false, label = "", onPress = () => {} } = props;
+  const {
+    arrowIcon = false,
+    label = "",
+    onPress = () => {},
+    labelStyle = {
+      // color: "inherit",
+    },
+    ...rest
+  } = props;
 
   return (
     <>
@@ -24,9 +32,10 @@ const GhostButtons = (props) => {
           onClick={onPress}
           type="primary"
           ghost
+          {...rest}
           // style={{ backgroundColor: "#1027B8" }}
         >
-          <span>
+          <span style={labelStyle}>
             {label}
             {arrowIcon && (
               <Image

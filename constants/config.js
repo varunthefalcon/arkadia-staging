@@ -16,6 +16,16 @@ export const URL_INITIATE_DEAL = URL_BASE + "/deal/initiatedeal";
 export const URL_RM_PENDING_ASSET =
   URL_BASE + "/rm/fetchValidationPendingAssets";
 
+export const URL_RM_VALIDATE_ASSET = URL_BASE + "/rm/updatepaymentterms";
+
+export const URL_AO_APPROVE_REJECT_ASSET =
+  URL_BASE + "/asset/agree/paymentterms/";
+
+export const URL_FETCH_CATEGORY = URL_BASE + "/asset/fetchCategory";
+
+export const URL_FETCH_PENDING_ASSETS =
+  URL_BASE + "/rm/fetchValidationPendingAssets";
+
 export const URL_GET_TOKENIZED_ASSET = URL_BASE + "/tokenizedAssets";
 
 export const BRAND_COLOR = "#1027b8";

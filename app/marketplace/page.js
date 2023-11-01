@@ -15,11 +15,10 @@ import { useRouter } from "next/navigation";
 import FilterInput from "@/components/FilterButton/FilterInput";
 import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
 
-export default function SignIn() {
+export default function Marketplace() {
   const [listings, setListings] = useState([]);
   const [assetTypes, setAssetTypes] = useState([]);
   const [apiFlag, setAPIFlag] = useState(false);
-  const navigate = useRouter();
 
   const dataSource = [
     {
@@ -150,6 +149,8 @@ export default function SignIn() {
 }
 
 const AssetItem = ({ asset = {} }) => {
+  const navigate = useRouter();
+
   return (
     <>
       <div

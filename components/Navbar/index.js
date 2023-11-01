@@ -65,7 +65,11 @@ const Navbar = (props) => {
                   styles.navItems,
                   pathname.includes("dashboard") ? styles.active_navItem : "",
                 ].join(" ")}
-                onClick={() => router.push("/ao/dashboard")}
+                onClick={() =>
+                  user.customerType === "RM"
+                    ? router.push("/rm/dashboard")
+                    : router.push("/ao/dashboard")
+                }
               >
                 Dashboard
               </span>
@@ -95,11 +99,40 @@ const Navbar = (props) => {
               showArrow={true}
               overlayInnerStyle={{ padding: 0 }}
               content={
-                <div style={{ padding: "0", width: "280px" }}>
+                <div
+                  style={{ padding: "0", width: "280px", position: "relative" }}
+                >
                   <b>Notifications{`(${notifications.length})`}</b>
                   <hr></hr>
                   <br />
-                  <p style={{ textAlign: "center" }}>You are all caught up!</p>
+                  {notifications.length === 0 && (
+                    <p style={{ textAlign: "center" }}>
+                      You are all caught up!
+                    </p>
+                  )}
+                  {notifications.slice(0, 5).map((e) => (
+                    <>
+                      <div
+                        key={e.notificationId}
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <p>{e.comments || "N/A"}</p>
+                        <p>now</p>
+                      </div>
+                      <hr
+                        style={{
+                          // width: "calc(100% + 32px)",
+                          // left: "-16px",
+                          // position: "absolute",
+                          margin: "16px 0",
+                        }}
+                      />
+                    </>
+                  ))}
                 </div>
               }
               trigger="click"
@@ -130,7 +163,11 @@ const Navbar = (props) => {
                 }}
               >
                 <AvatarBadge />
-                <span style={{ padding: "0 10px" }}>Asset Owner</span>
+                <span style={{ padding: "0 10px" }}>
+                  {user.customerType === "AO" && "Asset Owner"}
+                  {user.customerType === "CRO" && "Cash Rich Customer"}
+                  {user.customerType === "RM" && "Relationship manager"}
+                </span>
                 <CaretRightFilled style={{ color: "#1027B8" }} rotate={90} />
               </div>
             </Popover>

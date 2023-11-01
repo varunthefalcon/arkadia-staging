@@ -9,6 +9,7 @@ const PrimaryButtons = (props) => {
     onPress = () => {},
     disabled = false,
     loading = false,
+    labelStyle = {},
     ...rest
   } = props;
 
@@ -24,7 +25,7 @@ const PrimaryButtons = (props) => {
         type="primary"
         {...rest}
       >
-        <span>
+        <span style={labelStyle}>
           {label}
           {arrowIcon && (
             <Image

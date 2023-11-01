@@ -2,11 +2,15 @@
 
 import Navbar from "@/components/Navbar";
 import styles from "./page.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Checkbox, Col, Input, Row, Select } from "antd";
 import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
 import GhostButtons from "@/components/Buttons/GhostButtons";
-import { URL_CREATE_ASSET, URL_GET_TOKENIZED_ASSET } from "@/constants/config";
+import {
+  URL_CREATE_ASSET,
+  URL_FETCH_CATEGORY,
+  URL_GET_TOKENIZED_ASSET,
+} from "@/constants/config";
 import { getUserInfo, theme } from "@/lib/helper";
 import { Button, ConfigProvider } from "antd";
 import axios from "axios";
@@ -18,6 +22,8 @@ const NewAsset = () => {
   const [termsConditions, setTermsConditions] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+
   const user = getUserInfo();
   const router = useRouter();
 
@@ -27,25 +33,27 @@ const NewAsset = () => {
     setAssetInfo((info) => ({ ...info, [name]: value }));
   };
 
+  const handleAssetTypeChange = (e = {}) => {
+    setAssetInfo((info) => ({ ...info, categoryId: e.value }));
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const config = {
+        url: URL_FETCH_CATEGORY,
+        method: "GET",
+      };
+
+      const resp = await axios(config);
+
+      setCategories(resp.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // const config1 = {
-    //   url: URL_GET_TOKENIZED_ASSET,
-    //   method: "GET",
-    //   params: {
-    //     customerId: user.customerId,
-    //   },
-    // };
-
-    const config2 = {
-      url: "http://defi.ap-southeast-1.elasticbeanstalk.com:9002/defi/api/v1/hedera/createAsset",
-      method: "POST",
-      data: {
-        customerId: user.customerId,
-        assetName: assetInfo.assetName,
-      },
-    };
 
     const config = {
       url: URL_CREATE_ASSET,
@@ -53,7 +61,6 @@ const NewAsset = () => {
       data: {
         customerId: user.customerId,
         assetName: assetInfo.assetName,
-        // nftTokenId: 0,
         categoryId: 1,
         loanRequested: parseInt(assetInfo.loanRequested),
         assetPrice: parseInt(assetInfo.assetPrice),
@@ -66,13 +73,13 @@ const NewAsset = () => {
 
     try {
       setLoading(true);
-      const resp = await axios(config2);
+      const resp = await axios(config);
 
       console.log(resp);
 
-      // toast.success("Asset created and sent for approval.");
+      toast.success("Asset created and sent for approval.");
 
-      // router.push("/ao/dashboard");
+      router.push("/ao/dashboard");
     } catch (error) {
       console.error(error);
     } finally {
@@ -80,7 +87,9 @@ const NewAsset = () => {
     }
   };
 
-  console.log(user);
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   return (
     <>
@@ -90,8 +99,8 @@ const NewAsset = () => {
           <div className={styles.wrapper}>
             <p className={styles.pageTitle}>
               {previewMode
-                ? "Digital Asset Onboarding Application"
-                : "Review Listing"}
+                ? "Review Digital Asset Onboarding Application"
+                : "Digital Asset Onboarding Application"}
             </p>
             <p className={styles.subTitle}>Listing Information</p>
 
@@ -115,11 +124,21 @@ const NewAsset = () => {
                     {previewMode ? (
                       <p>{assetInfo.categoryId}</p>
                     ) : (
-                      <Input
-                        name="categoryId"
-                        onChange={handleAssetInfoChange}
-                        value={assetInfo.categoryId}
-                      />
+                      <>
+                        <br />
+                        <Select
+                          placeholder="Select a category"
+                          style={{ width: "100%" }}
+                          onChange={handleAssetTypeChange}
+                        >
+                          {categories.map((e) => (
+                            <Select.Option key={e.categoryId}>
+                              {" "}
+                              {e.categoryName}{" "}
+                            </Select.Option>
+                          ))}
+                        </Select>
+                      </>
                     )}
                   </label>
                 </Col>

@@ -11,12 +11,15 @@ import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
 import { useRouter } from "next/navigation";
 import { URL_AO_LIST_ASSET } from "@/constants/config";
 import {
+  RenderStatus,
   formatCurrency,
   getUserDetails,
   getUserInfo,
   setUserDetails,
 } from "@/lib/helper";
 import axios from "axios";
+import TwoColStrip from "@/components/Analytics/TwoColStrip";
+import PieChartComp from "@/components/Analytics/PieChart";
 
 export default function SignIn() {
   const dataSource = [
@@ -55,7 +58,11 @@ export default function SignIn() {
     {
       title: "Status",
       dataIndex: "eligibility",
-      render: (text) => <span>{text === "true" ? "Approved" : "Pending"}</span>,
+      render: (text) => (
+        <span>
+          <RenderStatus status={text === "false" ? "pending" : "success"} />
+        </span>
+      ),
     },
   ];
 
@@ -188,7 +195,7 @@ export default function SignIn() {
         <div
           style={{
             width: "100%",
-            maxWidth: "900px",
+            maxWidth: "940px",
           }}
         >
           {isInvestorApproved && (
@@ -286,6 +293,61 @@ export default function SignIn() {
           )}
           <p className={styles.pageTitle}>Hello, Asset Owner</p>
 
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              marginBottom: "20px",
+              justifyContent: "space-between",
+            }}
+          >
+            <div style={{ width: "64%" }}>
+              <b style={{ marginBottom: "10px", display: "block" }}>
+                Quick Analytics
+              </b>
+              <br />
+              <TwoColStrip
+                title1={"Outstanding Loan Amount"}
+                title2={"Amount Invested"}
+                subTitle1={formatCurrency(20000)}
+                subTitle2={"-"}
+                style={{ marginBottom: "10px" }}
+              />
+              <TwoColStrip
+                key={2}
+                title1={"Assets"}
+                title2={"Active Loans"}
+                subTitle1={3}
+                subTitle2={"1"}
+              />
+            </div>
+            <div
+              style={{
+                width: "34%",
+              }}
+            >
+              <div
+                style={{
+                  height: "calc(100% - 30px)",
+                }}
+              >
+                <b style={{ marginBottom: "10px", display: "block" }}>
+                  Asset Distribution
+                </b>
+                <br />
+                <div
+                  style={{
+                    backgroundColor: "#F8F8FD",
+                    height: "100%",
+                    borderRadius: "8px",
+                  }}
+                >
+                  <PieChartComp />
+                </div>
+              </div>
+            </div>
+          </div>
+
           <ArkTable
             title="My Transaction"
             columnData={dataSource}
@@ -297,6 +359,13 @@ export default function SignIn() {
                 ? () => router.push("/asset/new")
                 : handleApplyToInvestor
             }
+            onRow={(record) => {
+              return {
+                onClick: () => {
+                  router.push("/asset/view?assetId=" + record.assetId);
+                },
+              };
+            }}
             rBtnOnClick={
               isInvestorApproved
                 ? () => router.push("/asset/new")

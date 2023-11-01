@@ -33,8 +33,11 @@ const ViewAsset = () => {
       };
       const resp = await axios(config);
 
-      console.log(resp);
-      setAssetInfo({ paymentTerms: {}, ...(resp.data || {}) });
+      setAssetInfo({
+        paymentTerms: {},
+        ...(resp.data || {}),
+        assetType: resp.data?.category?.categoryName,
+      });
     } catch (error) {
       console.error(error);
     } finally {
@@ -101,7 +104,7 @@ const ViewAsset = () => {
             <Col span={12}>
               <label className={styles.label}>
                 Asset Type
-                <p>{assetInfo.categoryId}</p>
+                <p>{assetInfo.assetType}</p>
               </label>
             </Col>
             <Col span={12}>
@@ -117,13 +120,13 @@ const ViewAsset = () => {
             <Col span={12}>
               <label className={styles.label}>
                 Desired Loan Amount
-                <p>{assetInfo.loanRequested}</p>
+                <p>{formatCurrency(assetInfo.loanRequested)}</p>
               </label>
             </Col>
             <Col span={12}>
               <label className={styles.label}>
                 Loan Tenure
-                <p>{assetInfo.paymentTerms.duration}</p>
+                <p>{assetInfo?.paymentTerms?.duration || 0} years</p>
               </label>
             </Col>
 
@@ -157,24 +160,33 @@ const ViewAsset = () => {
               <label className={styles.label}>
                 Validated By
                 <p className={styles.highlight}>
-                  {assetInfo.paymentTerms.manager || "N/A"}
+                  {assetInfo.paymentTerms.manager || "Relationship Manager"}
                 </p>
               </label>
             </Col>
           </Row>
-
-          <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-            <GhostButtons
-              onPress={() => setPreviewMode((e) => !e)}
-              label="Cancel"
-            />{" "}
-            &nbsp;
-            <PrimaryButtons
-              onPress={initiateDeal}
-              loading={loading}
-              label="Request for Loan Agreement"
-            />
-          </div>
+          {assetInfo.eligibility === "false" ? (
+            <div style={{ marginBottom: "3rem" }}>
+              <Alert
+                message="Awaiting Approval. Asset not yet validated."
+                type="warning"
+                showIcon
+              />
+            </div>
+          ) : (
+            <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+              <GhostButtons
+                onPress={() => setPreviewMode((e) => !e)}
+                label="Cancel"
+              />{" "}
+              &nbsp;
+              <PrimaryButtons
+                onPress={initiateDeal}
+                loading={loading}
+                label="Request for Loan Agreement"
+              />
+            </div>
+          )}
         </div>
       </div>
     </>

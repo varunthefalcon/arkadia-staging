@@ -72,7 +72,6 @@ const ArkTable = (props) => {
         dataSource={rowData}
         {...additionalProps}
         rowClassName={styles.pointer}
-        pagination={{ position: ["none", "none"] }}
       />
     </div>
   );

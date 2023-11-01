@@ -1,5 +1,5 @@
 .pageTitle {
-  font-family: --font-frank;
+  font-family: var(--font-inter);
   font-size: 26px;
   font-weight: 700;
   line-height: 29px;
@@ -19,7 +19,7 @@
 }
 
 .bannerValue {
-  font-family: --font-frank;
+  font-family: var(--font-inter);
   font-size: 26px;
   font-weight: 700;
   line-height: 29px;

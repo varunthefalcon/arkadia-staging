@@ -92,7 +92,6 @@ const ArkCharts = () => {
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
-          <Legend />
           <Line
             type="monotone"
             dataKey="SGD"
