@@ -171,7 +171,7 @@ const ValidateAsset = () => {
               <Col span={12}>
                 <label className={styles.label}>
                   Loan Tenure
-                  <p>{assetInfo?.paymentTerms?.duration || 0} years</p>
+                  <p>{assetInfo?.paymentTerms?.duration || 0} months</p>
                 </label>
               </Col>
               <Col span={12}>

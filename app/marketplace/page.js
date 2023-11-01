@@ -51,7 +51,7 @@ export default function Marketplace() {
     {
       title: "Tenure",
       dataIndex: "tenure",
-      render: (text) => <span>{text * 12} months</span>,
+      render: (text) => <span>{text} months</span>,
     },
     {
       title: "Return (P.A)",
@@ -195,7 +195,7 @@ const AssetItem = ({ asset = {} }) => {
           />
           <VerticalLabelValues
             label="Tenure"
-            value={asset.tenure * 12 + " months"}
+            value={asset.tenure + " months"}
           />
           <VerticalLabelValues
             label="Listed Date"

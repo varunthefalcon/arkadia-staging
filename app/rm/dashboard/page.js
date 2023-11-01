@@ -49,7 +49,7 @@ export default function RMDashboard() {
     {
       title: "Tenure",
       dataIndex: "tenure",
-      render: (text) => <span>{text} years</span>,
+      render: (text) => <span>{text} months</span>,
     },
     {
       title: "Return (P.A)",

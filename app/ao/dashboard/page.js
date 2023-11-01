@@ -53,7 +53,7 @@ export default function SignIn() {
     {
       title: "Tenure",
       dataIndex: "tenure",
-      render: (text) => <span>{text * 12} months</span>,
+      render: (text) => <span>{text} months</span>,
     },
     {
       title: "Status",

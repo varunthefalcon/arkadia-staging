@@ -190,15 +190,15 @@ const NewAsset = () => {
                           }))
                         }
                       >
-                        <Select.Option value="24">2 years</Select.Option>
-                        <Select.Option value="36">3 years</Select.Option>
-                        <Select.Option value="48">4 years</Select.Option>
-                        <Select.Option value="60">5 years</Select.Option>
+                        <Select.Option value="6">6 months</Select.Option>
+                        <Select.Option value="12">12 months</Select.Option>
+                        <Select.Option value="24">24 months</Select.Option>
+                        {/* <Select.Option value="60">5 years</Select.Option>
                         <Select.Option value="72">6 years</Select.Option>
                         <Select.Option value="84">7 years</Select.Option>
                         <Select.Option value="96">8 years</Select.Option>
                         <Select.Option value="108">9 years</Select.Option>
-                        <Select.Option value="120">10 years</Select.Option>
+                        <Select.Option value="120">10 years</Select.Option> */}
                       </Select>
                     )}
                   </label>
