@@ -16,7 +16,7 @@
 
 .navItems {
   cursor: pointer;
-  font-family: var(--font-mulish);
+  font-family: var(--font-inter);
   font-size: 16px;
   font-weight: 800;
   line-height: 44px;

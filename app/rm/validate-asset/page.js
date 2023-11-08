@@ -13,12 +13,13 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { URL_RM_VALIDATE_ASSET, URL_VIEW_ASSET } from "@/constants/config";
 import axios from "axios";
-import { formatCurrency } from "@/lib/helper";
+import { formatCurrency, getAssetStatus } from "@/lib/helper";
 
 const ValidateAsset = () => {
   const [assetInfo, setAssetInfo] = useState({});
   const [loading, setLoading] = useState(false);
   const [eligibilityFlag, setEligibilityFlag] = useState("no"); // yes, loading
+  const [assetStatus, setAssetStatus] = useState("");
 
   const url = useSearchParams();
   const router = useRouter();
@@ -49,13 +50,20 @@ const ValidateAsset = () => {
         paymentTerms: {},
         ...(resp.data || {}),
         assetType: resp.data?.category?.categoryName,
+        rMInterestRate: resp?.data?.paymentTerms?.rMInterestRate,
       });
+
+      const assetStatus = getAssetStatus(resp.data);
+
+      setAssetStatus(assetStatus);
     } catch (error) {
       console.error(error);
     }
   }, [assetId]);
 
   const handleReject = async (e) => {
+    if (!confirm("Are you sure to reject?")) return;
+
     e.preventDefault();
 
     try {
@@ -74,7 +82,7 @@ const ValidateAsset = () => {
       setLoading(true);
       const resp = await axios(config);
       toast.success("Loan Agreement Rejected Successfully.");
-      router.push("/marketplace");
+      router.push("/rm/dashboard");
       console.log(resp);
     } catch (error) {
       toast.error("Something went wrong, try again later.");
@@ -86,6 +94,8 @@ const ValidateAsset = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!confirm("Are you sure to approve?")) return;
 
     if (!assetInfo.rMInterestRate) {
       toast.warning("Interest rate is required!");
@@ -100,7 +110,7 @@ const ValidateAsset = () => {
           assetId: url.get("assetId"),
           rMInterestRate: assetInfo.rMInterestRate,
           rMInterestType: "Floating",
-          rMDuration: assetInfo?.paymentTerms?.duration,
+          duration: assetInfo?.paymentTerms?.duration,
           rMInterestPayoutCycle: "Half-Yearly",
           rMStatus: "GO",
         },
@@ -110,7 +120,7 @@ const ValidateAsset = () => {
       toast.success(
         "Loan Agreement approved Successfully and sent for AO acceptance."
       );
-      router.push("/marketplace");
+      router.push("/rm/dashboard");
       console.log(resp);
     } catch (error) {
       toast.error("Something went wrong, try again later.");
@@ -137,9 +147,18 @@ const ValidateAsset = () => {
       <Navbar showPages={true} showUserActions={true} />
       <div style={{ backgroundColor: "#EAEBF9" }}>
         <div className={styles.wrapper}>
-          <p className={styles.pageTitle}>Validate Listing</p>
+          <p className={styles.pageTitle}>Borrow Request Application</p>
           <p className={styles.subTitle}>Listing Information</p>
 
+          {assetStatus == "rejected" && (
+            <div style={{ marginBottom: "3rem" }}>
+              <Alert
+                message="This Borrow request is rejected."
+                type="error"
+                showIcon
+              />
+            </div>
+          )}
           <form name="basic" onSubmit={handleSubmit}>
             <label className={styles.label}>
               Asset Name
@@ -178,6 +197,7 @@ const ValidateAsset = () => {
                 <label className={styles.label}>
                   Interest Rates Offered*
                   <Input
+                    disabled={assetStatus !== "pending"}
                     style={{ margin: "8px 0 24px 0" }}
                     onChange={handleAssetInfoChange}
                     name="rMInterestRate"
@@ -192,6 +212,7 @@ const ValidateAsset = () => {
                   Start date*
                   <div style={{ margin: "8px 0 24px 0" }}>
                     <Input
+                      disabled={assetStatus !== "pending"}
                       // onChange={handleAssetInfoChange}
                       name="startDate"
                       // value={assetInfo.name}
@@ -206,6 +227,7 @@ const ValidateAsset = () => {
                   Final Maturity date*
                   <div style={{ margin: "8px 0 24px 0" }}>
                     <Input
+                      disabled={assetStatus !== "pending"}
                       // onChange={handleAssetInfoChange}
                       name="endDate"
                       // value={assetInfo.name}
@@ -252,6 +274,7 @@ const ValidateAsset = () => {
                     <small>In-progress...</small>
                     <PrimaryButtons
                       label="Evaluate"
+                      disabled={assetStatus !== "pending"}
                       // onPress={updateEligibility}
                       loading={true}
                     />
@@ -268,6 +291,7 @@ const ValidateAsset = () => {
                     <small>Eligibility yet to be verified.</small>
                     <PrimaryButtons
                       label="Evaluate"
+                      disabled={assetStatus !== "pending"}
                       onPress={updateEligibility}
                     />
                   </div>
@@ -289,20 +313,22 @@ const ValidateAsset = () => {
               </span>
             </div>
 
-            <div style={{ textAlign: "center" }}>
-              <GhostButtons
-                onPress={handleReject}
-                label="Reject"
-                disabled={!!loading}
-              />
-              &nbsp;
-              <PrimaryButtons
-                onPress={handleSubmit}
-                disabled={!!loading}
-                // type="submit"
-                label="Approve"
-              />
-            </div>
+            {assetStatus == "pending" && (
+              <div style={{ textAlign: "center" }}>
+                <GhostButtons
+                  onPress={handleReject}
+                  label="Reject"
+                  disabled={!!loading}
+                />
+                &nbsp;
+                <PrimaryButtons
+                  onPress={handleSubmit}
+                  disabled={!!loading}
+                  // type="submit"
+                  label="Approve"
+                />
+              </div>
+            )}
           </form>
         </div>
       </div>

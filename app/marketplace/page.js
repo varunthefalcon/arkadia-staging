@@ -10,7 +10,12 @@ import ArkTable from "@/components/tables";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { URL_LIST_VALIDATED_ASSET } from "@/constants/config";
-import { formatCurrency, formatDate } from "@/lib/helper";
+import {
+  formatCurrency,
+  formatDate,
+  getUserInfo,
+  getinterestRateColor,
+} from "@/lib/helper";
 import { useRouter } from "next/navigation";
 import FilterInput from "@/components/FilterButton/FilterInput";
 import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
@@ -19,46 +24,55 @@ export default function Marketplace() {
   const [listings, setListings] = useState([]);
   const [assetTypes, setAssetTypes] = useState([]);
   const [apiFlag, setAPIFlag] = useState(false);
+  const user = getUserInfo();
 
-  const dataSource = [
-    {
-      title: "Listing name",
-      dataIndex: "assetName",
-      // sorter: (a, b) => a.name - b.name,
-    },
-    {
-      title: "Category",
-      dataIndex: "categoryName",
-      sorter: (a, b) => a.category - b.category,
-    },
-    {
-      title: "Asset Price",
-      dataIndex: "assetPrice",
-      sorter: (a, b) => a.date - b.date,
-      render: (text) => formatCurrency(text),
-    },
-    {
-      title: "Listed Date",
-      dataIndex: "createdOn",
-      render: (text) => <span>{text.split("T")[0]}</span>,
-      sorter: (a, b) => a.date - b.date,
-    },
-    {
-      title: "Loan Amount",
-      dataIndex: "loanRequested",
-      render: (text) => formatCurrency(loanRequested),
-    },
-    {
-      title: "Tenure",
-      dataIndex: "tenure",
-      render: (text) => <span>{text} months</span>,
-    },
-    {
-      title: "Return (P.A)",
-      dataIndex: "interestRate",
-      render: (text) => <span>{text}%</span>,
-    },
-  ];
+  // const dataSource = [
+  //   {
+  //     title: "Listing name",
+  //     dataIndex: "assetName",
+  //     // sorter: (a, b) => a.name - b.name,
+  //   },
+  //   {
+  //     title: "Category",
+  //     dataIndex: "categoryName",
+  //     sorter: (a, b) => a.category - b.category,
+  //   },
+  //   {
+  //     title: "Asset Price",
+  //     dataIndex: "assetPrice",
+  //     sorter: (a, b) => a.date - b.date,
+  //     render: (text) => formatCurrency(text),
+  //   },
+  //   {
+  //     title: "Listed Date",
+  //     dataIndex: "createdOn",
+  //     render: (text) => <span>{text.split("T")[0]}</span>,
+  //     sorter: (a, b) => a.date - b.date,
+  //   },
+  //   {
+  //     title: "Loan Amount",
+  //     dataIndex: "loanRequested",
+  //     render: (text) => formatCurrency(loanRequested),
+  //   },
+  //   {
+  //     title: "Tenure",
+  //     dataIndex: "tenure",
+  //     render: (text) => <span>{text} months</span>,
+  //   },
+  //   {
+  //     title: "Return (P.A)",
+  //     dataIndex: "interestRate",
+  //     render: (text) => (
+  //       <b
+  //         style={{
+  //           color: getinterestRateColor(text),
+  //         }}
+  //       >
+  //         {text}%
+  //       </b>
+  //     ),
+  //   },
+  // ];
 
   async function getListings() {
     try {
@@ -68,12 +82,15 @@ export default function Marketplace() {
       };
       setAPIFlag(true);
       const resp = await axios(config);
-      const allListings = resp.data.map((e) => ({
-        ...e,
-        tenure: e.paymentTerms.duration,
-        interestRate: e.paymentTerms.rMInterestRate,
-        categoryName: e.category.categoryName,
-      }));
+      const allListings = resp.data
+        .map((e) => ({
+          ...e,
+          tenure: e.paymentTerms.duration,
+          interestRate: e.paymentTerms.rMInterestRate,
+          categoryName: e.category.categoryName,
+        }))
+        .filter((e) => e.customerId != user.customerId)
+        .reverse();
       setListings(allListings);
       const uniqueTypes = new Set(allListings.map((e) => e.categoryName));
       setAssetTypes([...uniqueTypes]);
@@ -183,6 +200,11 @@ const AssetItem = ({ asset = {} }) => {
             />
           </div>
         </div>
+        <p style={{ fontSize: "13px", padding: "8px 0" }}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vulputate
+          sem at lectus fringilla consectetur. Sed vel purus leo. Donec nec
+          venenatis arcu. Aliquam aliquam nibh at mi commodo commodo.
+        </p>
         <hr style={{ margin: "10px  0" }} />
         <div style={{ display: "flex", flexDirection: "row" }}>
           <VerticalLabelValues
@@ -191,7 +213,16 @@ const AssetItem = ({ asset = {} }) => {
           />
           <VerticalLabelValues
             label="Returns"
-            value={asset.interestRate + "%"}
+            comp={
+              <p
+                style={{
+                  fontWeight: "bold",
+                  color: getinterestRateColor(asset?.interestRate),
+                }}
+              >
+                {asset.interestRate + "%"}
+              </p>
+            }
           />
           <VerticalLabelValues
             label="Tenure"
@@ -207,11 +238,12 @@ const AssetItem = ({ asset = {} }) => {
   );
 };
 
-const VerticalLabelValues = ({ label = "", value = "" }) => {
+const VerticalLabelValues = ({ label = "", value = "", comp = null }) => {
   return (
     <div>
       <p className={styles.label}>{label}</p>
-      <p className={styles.value}>{value}</p>
+      {!!value && <p className={styles.value}>{value}</p>}
+      {comp}
     </div>
   );
 };

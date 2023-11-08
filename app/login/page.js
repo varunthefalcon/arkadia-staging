@@ -9,16 +9,18 @@ import Footer from "@/components/Footer";
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { setUserInfo } from "@/lib/helper";
+import { getUserInfo, setUserInfo } from "@/lib/helper";
 import { URL_LOGIN } from "@/constants/config";
 import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 export default function SignIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [apiLoading, setAPILoading] = useState(false);
   const router = useRouter();
+  const user = getUserInfo();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,6 +55,16 @@ export default function SignIn() {
       setAPILoading(false);
     }
   };
+
+  useEffect(() => {
+    if (user.customerType === "AO") {
+      router.push("/ao/dashboard");
+    } else if (user.customerType === "CRO") {
+      router.push("/ao/dashboard");
+    } else if (user.customerType === "RM") {
+      router.push("/rm/dashboard");
+    }
+  }, []);
 
   return (
     <main>

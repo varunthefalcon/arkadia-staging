@@ -1,5 +1,5 @@
 .pageTitle {
-  font-family: --font-frank;
+  font-family: var(--font-inter);
   font-size: 53px;
   font-style: normal;
   font-weight: 500;
@@ -8,7 +8,7 @@
 }
 
 .pageSubTitle {
-  font-family: var(--font-mulish);
+  font-family: var(--font-inter);
   font-size: 16px;
   font-style: normal;
   font-weight: 600;

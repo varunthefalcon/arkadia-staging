@@ -9,12 +9,14 @@ import {
 } from "recharts";
 
 const data = [
-  { name: "Real Estate", value: 400 },
-  { name: "Fine Art", value: 300 },
-  { name: "Wines", value: 200 },
+  { name: "Carbon Credits", value: 20 },
+  { name: "Fine Art", value: 12.5 },
+  { name: "Gold", value: 10 },
+  { name: "Mining", value: 5 },
+  { name: "Real Estate", value: 52 },
 ];
 
-const COLORS = ["#707DD4", "#1027B8", "#0A1767"];
+const COLORS = ["#BDC6FF", "#FFB7C4", "#7CEDE6", "#FFD18C", "#CABDBA"];
 
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({
@@ -34,7 +36,8 @@ const renderCustomizedLabel = ({
     <text
       x={x}
       y={y}
-      fill="white"
+      fontSize={12}
+      fill="black"
       textAnchor={x > cx ? "start" : "end"}
       dominantBaseline="central"
     >
@@ -84,9 +87,14 @@ const PieChartComp = () => {
             }}
           >
             <div
-              style={{ height: 10, width: 10, backgroundColor: COLORS[i] }}
+              style={{
+                height: 10,
+                width: 10,
+                borderRadius: "50%",
+                backgroundColor: COLORS[i],
+              }}
             ></div>
-            <p>{e.name}</p>
+            <small>&nbsp;{e.name}</small>
           </div>
         ))}
       </div>

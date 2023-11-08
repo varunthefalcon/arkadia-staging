@@ -15,7 +15,11 @@ import {
   URL_VIEW_ASSET,
 } from "@/constants/config";
 import axios from "axios";
-import { formatCurrency } from "@/lib/helper";
+import {
+  formatCurrency,
+  getAssetStatus,
+  getinterestRateColor,
+} from "@/lib/helper";
 
 const ReviewAsset = () => {
   const [assetInfo, setAssetInfo] = useState({});
@@ -83,11 +87,11 @@ const ReviewAsset = () => {
         paymentTerms: {},
         ...(resp.data || {}),
         assetType: resp.data?.category?.categoryName,
-        interestRate: assetInfo.paymentTerms.rMInterestRate,
-        interestType: assetInfo.paymentTerms.rMInterestType,
-        duration: assetInfo.paymentTerms.duration,
-        interestPayoutCycle: assetInfo.paymentTerms.rMInterestPayoutCycle,
-        loanAmount: assetInfo.loanRequested,
+        interestRate: resp.data?.paymentTerms?.rMInterestRate,
+        interestType: resp.data?.paymentTerms?.rMInterestType,
+        duration: resp.data?.paymentTerms?.duration,
+        interestPayoutCycle: resp.data?.paymentTerms?.rMInterestPayoutCycle,
+        loanAmount: resp.data.loanRequested,
       });
     } catch (error) {
       console.error(error);
@@ -98,25 +102,45 @@ const ReviewAsset = () => {
     getAsset();
   }, [getAsset]);
 
+  console.log(assetInfo);
+
   return (
     <>
       <Navbar showPages={true} showUserActions={true} />
       <div>
         <div className={styles.wrapper}>
-          <Alert
-            message="Your listing has been updated with interest rates and validity."
-            type="warning"
-            showIcon
-            closable
-          />
+          {["rejected"].includes(getAssetStatus(assetInfo)) ? (
+            <Alert
+              message="Asset is not active. Borrow request is rejected by RM"
+              type="error"
+              showIcon
+            />
+          ) : (
+            <Alert
+              message="Your Borrowing Request has been updated with interest rates and validity."
+              type="warning"
+              showIcon
+              closable
+            />
+          )}
           <br />
-          <p className={styles.pageTitle}>Review Listing</p>
-          <p className={styles.subTitle}>Listing Information</p>
+          <p className={styles.pageTitle}>Review Borrowing Request</p>
+          <p className={styles.subTitle}>Asset Information</p>
 
-          <label className={styles.label}>
-            Asset Name
-            <p>{assetInfo.assetName}</p>
-          </label>
+          <Row gutter={20}>
+            <Col span={12}>
+              <label className={styles.label}>
+                Account ID
+                <p>{assetInfo.nFTTokenId || "John Doe"}</p>
+              </label>
+            </Col>
+            <Col span={12}>
+              <label className={styles.label}>
+                Asset Name
+                <p>{assetInfo.assetName}</p>
+              </label>
+            </Col>
+          </Row>
           <Row gutter={20}>
             <Col span={12}>
               <label className={styles.label}>
@@ -150,7 +174,15 @@ const ReviewAsset = () => {
             <Col span={12}>
               <label className={styles.label}>
                 Interest Rates Offered
-                <p className={styles.highlight}>{assetInfo.interestRate}%</p>
+                <p
+                  className={styles.highlight}
+                  style={{
+                    fontWeight: "bold",
+                    color: getinterestRateColor(assetInfo?.interestRate),
+                  }}
+                >
+                  {assetInfo.interestRate}%
+                </p>
               </label>
             </Col>
 
@@ -175,21 +207,23 @@ const ReviewAsset = () => {
             </Col>
           </Row>
 
-          <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-            <GhostButtons
-              disabled={!!loading}
-              loading={loading === "reject"}
-              onPress={rejectOffer}
-              label="Reject"
-            />{" "}
-            &nbsp;
-            <PrimaryButtons
-              disabled={!!loading}
-              loading={loading === "accept"}
-              onPress={acceptOffer}
-              label="Accept and List on Marketplace"
-            />
-          </div>
+          {["rmApproved"].includes(getAssetStatus(assetInfo)) && (
+            <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+              <GhostButtons
+                disabled={!!loading}
+                loading={loading === "reject"}
+                onPress={rejectOffer}
+                label="Reject"
+              />{" "}
+              &nbsp;
+              <PrimaryButtons
+                disabled={!!loading}
+                loading={loading === "accept"}
+                onPress={acceptOffer}
+                label="Accept and List on Marketplace"
+              />
+            </div>
+          )}
         </div>
       </div>
     </>

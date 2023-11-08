@@ -15,6 +15,7 @@ const ArkTable = (props) => {
     emptylistAsButton = false,
     hideTitle = false,
     emptylistAsText = false,
+    secondlineContent = null,
     ...rest
   } = props;
 
@@ -67,6 +68,7 @@ const ArkTable = (props) => {
           </Button>
         )}
       </div>
+      {secondlineContent}
       <Table
         columns={columnData}
         dataSource={rowData}

@@ -16,7 +16,7 @@
 }
 
 .banner_title {
-  font-family: --font-frank;
+  font-family: var(--font-inter);
   font-size: 32px;
   max-width: 250px;
   color: #f8f8fd;
@@ -25,7 +25,7 @@
 }
 
 .banner_sub_title {
-  font-family: var(--font-mulish);
+  font-family: var(--font-inter);
   font-size: 14px;
   color: #f8f8fd;
   margin-top: 12px;
@@ -34,7 +34,7 @@
 }
 
 .pageTitle {
-  font-family: --font-frank;
+  font-family: var(--font-inter);
   font-size: 26px;
   font-weight: 700;
   line-height: 29px;
@@ -53,7 +53,7 @@
 
 .tableTitle {
   background-color: #0a1767;
-  font-family: var(--font-mulish);
+  font-family: var(--font-inter);
   color: #f8f8fd;
 
   padding: 8px;
@@ -65,7 +65,7 @@
 }
 
 .bannerLabel {
-  font-family: var(--font-mulish);
+  font-family: var(--font-inter);
   font-size: 12px;
   font-weight: 900;
   line-height: 17px;
@@ -74,7 +74,7 @@
 }
 
 .bannerValue {
-  font-family: --font-frank;
+  font-family: var(--font-inter);
   font-size: 26px;
   font-weight: 700;
   line-height: 29px;

@@ -93,7 +93,7 @@ const ArkCharts = () => {
           <YAxis />
           <Tooltip />
           <Line
-            type="monotone"
+            // type="monotone"
             dataKey="SGD"
             strokeWidth={"2px"}
             stroke="#1027B8"

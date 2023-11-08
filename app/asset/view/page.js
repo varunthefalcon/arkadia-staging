@@ -7,7 +7,12 @@ import { Alert, Checkbox, Col, Input, Row, Select } from "antd";
 import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
 import GhostButtons from "@/components/Buttons/GhostButtons";
 import axios from "axios";
-import { formatCurrency, getUserInfo } from "@/lib/helper";
+import {
+  formatCurrency,
+  getAssetStatus,
+  getUserInfo,
+  getinterestRateColor,
+} from "@/lib/helper";
 import { URL_INITIATE_DEAL, URL_VIEW_ASSET } from "@/constants/config";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -16,6 +21,20 @@ import { useSearchParams } from "next/navigation";
 const ViewAsset = () => {
   const [assetInfo, setAssetInfo] = useState({ paymentTerms: {} });
   const [loading, setLoading] = useState(false);
+
+  const [cashRichOfferId, setCashRichOfferId] = useState(null);
+
+  const getCashrichId = async (customerId) => {
+    try {
+      const resp = await axios.get(
+        "http://defi.ap-southeast-1.elasticbeanstalk.com:9002/defi/api/v1/cashrich/croffer?customerId=" +
+          customerId
+      );
+      setCashRichOfferId(resp.data[0].cashRichOfferId);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const router = useRouter();
   const user = getUserInfo();
@@ -46,18 +65,20 @@ const ViewAsset = () => {
   }, [assetId]);
 
   const initiateDeal = async () => {
+    if (!confirm("Are you sure to request a loan?")) return;
     try {
       const config = {
         method: "POST",
         url: URL_INITIATE_DEAL,
         data: {
           assetId: url.get("assetId"),
-          cashRichOfferId: 652,
+          cashRichOfferId: cashRichOfferId,
           interestRate: assetInfo.paymentTerms.rMInterestRate,
           interestType: assetInfo.paymentTerms.rMInterestType,
           duration: assetInfo.paymentTerms.duration,
           interestPayoutCycle: assetInfo.paymentTerms.rMInterestPayoutCycle,
           loanAmount: assetInfo.loanRequested,
+          customerId: assetInfo.customer.customerId,
         },
       };
       setLoading(true);
@@ -77,6 +98,7 @@ const ViewAsset = () => {
 
   useEffect(() => {
     getAsset();
+    getCashrichId(user.customerId);
   }, [getAsset]);
 
   return (
@@ -133,8 +155,16 @@ const ViewAsset = () => {
             <Col span={12}>
               <label className={styles.label}>
                 Interest Rates Offered
-                <p className={styles.highlight}>
-                  {assetInfo.paymentTerms.rMInterestRate}%
+                <p
+                  className={styles.highlight}
+                  style={{
+                    fontWeight: "bold",
+                    color: getinterestRateColor(
+                      assetInfo?.paymentTerms?.rMInterestRate
+                    ),
+                  }}
+                >
+                  {assetInfo?.paymentTerms?.rMInterestRate}%
                 </p>
               </label>
             </Col>
@@ -143,7 +173,7 @@ const ViewAsset = () => {
               <label className={styles.label}>
                 Start date
                 <p className={styles.highlight}>
-                  {assetInfo.paymentTerms.startDate || "N/A"}
+                  {assetInfo?.paymentTerms?.startDate || "N/A"}
                 </p>
               </label>
             </Col>
@@ -151,7 +181,7 @@ const ViewAsset = () => {
               <label className={styles.label}>
                 Final Maturity date
                 <p className={styles.highlight}>
-                  {assetInfo.paymentTerms.endDate || "N/A"}
+                  {assetInfo?.paymentTerms?.endDate || "N/A"}
                 </p>
               </label>
             </Col>
@@ -160,12 +190,12 @@ const ViewAsset = () => {
               <label className={styles.label}>
                 Validated By
                 <p className={styles.highlight}>
-                  {assetInfo.paymentTerms.manager || "Relationship Manager"}
+                  {assetInfo?.paymentTerms?.manager || "Relationship Manager"}
                 </p>
               </label>
             </Col>
           </Row>
-          {assetInfo.eligibility === "false" ? (
+          {["rmApproved", "pending"].includes(getAssetStatus(assetInfo)) && (
             <div style={{ marginBottom: "3rem" }}>
               <Alert
                 message="Awaiting Approval. Asset not yet validated."
@@ -173,20 +203,33 @@ const ViewAsset = () => {
                 showIcon
               />
             </div>
-          ) : (
-            <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-              <GhostButtons
-                onPress={() => setPreviewMode((e) => !e)}
-                label="Cancel"
-              />{" "}
-              &nbsp;
-              <PrimaryButtons
-                onPress={initiateDeal}
-                loading={loading}
-                label="Request for Loan Agreement"
+          )}
+
+          {["rejected"].includes(getAssetStatus(assetInfo)) && (
+            <div style={{ marginBottom: "3rem" }}>
+              <Alert
+                message="Asset is not active. Borrow request is rejected by RM"
+                type="error"
+                showIcon
               />
             </div>
           )}
+          {user.customerType != "RM" &&
+            assetInfo.eligibility === "true" &&
+            assetInfo.customerId != user.customerId && (
+              <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+                {/* <GhostButtons
+                  onPress={() => setPreviewMode((e) => !e)}
+                  label="Cancel"
+                />{" "} */}
+                &nbsp;
+                <PrimaryButtons
+                  onPress={initiateDeal}
+                  loading={loading}
+                  label="Request for Loan Agreement"
+                />
+              </div>
+            )}
         </div>
       </div>
     </>

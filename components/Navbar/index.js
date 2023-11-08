@@ -7,7 +7,13 @@ import AvatarBadge from "@/components/Badge";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
-import { getUserInfo, logoutUser } from "@/lib/helper";
+import {
+  RenderNotification,
+  getNotificationLabel,
+  getUserInfo,
+  getUserLabel,
+  logoutUser,
+} from "@/lib/helper";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -43,6 +49,12 @@ const Navbar = (props) => {
 
   useEffect(() => {
     getNotification();
+
+    const interval = setInterval(() => {
+      getNotification();
+    }, 10000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -100,7 +112,11 @@ const Navbar = (props) => {
               overlayInnerStyle={{ padding: 0 }}
               content={
                 <div
-                  style={{ padding: "0", width: "280px", position: "relative" }}
+                  style={{
+                    padding: "0",
+                    width: "280px",
+                    position: "relative",
+                  }}
                 >
                   <b>Notifications{`(${notifications.length})`}</b>
                   <hr></hr>
@@ -111,27 +127,10 @@ const Navbar = (props) => {
                     </p>
                   )}
                   {notifications.slice(0, 5).map((e) => (
-                    <>
-                      <div
-                        key={e.notificationId}
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <p>{e.comments || "N/A"}</p>
-                        <p>now</p>
-                      </div>
-                      <hr
-                        style={{
-                          // width: "calc(100% + 32px)",
-                          // left: "-16px",
-                          // position: "absolute",
-                          margin: "16px 0",
-                        }}
-                      />
-                    </>
+                    <RenderNotification
+                      key={e.notificationId}
+                      notification={e}
+                    />
                   ))}
                 </div>
               }
@@ -163,11 +162,7 @@ const Navbar = (props) => {
                 }}
               >
                 <AvatarBadge />
-                <span style={{ padding: "0 10px" }}>
-                  {user.customerType === "AO" && "Asset Owner"}
-                  {user.customerType === "CRO" && "Cash Rich Customer"}
-                  {user.customerType === "RM" && "Relationship manager"}
-                </span>
+                <span style={{ padding: "0 10px" }}>{getUserLabel()}</span>
                 <CaretRightFilled style={{ color: "#1027B8" }} rotate={90} />
               </div>
             </Popover>

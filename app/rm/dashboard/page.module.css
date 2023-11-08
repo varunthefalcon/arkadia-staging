@@ -10,7 +10,7 @@
 }
 
 .bannerLabel {
-  font-family: var(--font-mulish);
+  font-family: var(--font-inter);
   font-size: 12px;
   font-weight: 900;
   line-height: 17px;
@@ -26,4 +26,22 @@
   letter-spacing: 0em;
   text-align: left;
   margin: 8px 0;
+}
+
+.table_subitem {
+  cursor: pointer;
+  font-family: var(--font-inter);
+  font-size: 16px;
+  font-weight: 800;
+  /* line-height: 44px; */
+  letter-spacing: 0em;
+  text-align: left;
+  color: #0a1767;
+  padding: 10px 24px;
+  /* margin: 0 12px; */
+}
+
+.active_table_subitem {
+  border-bottom: 4px solid #1027b8;
+  /* padding-bottom: 13px; */
 }

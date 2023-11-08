@@ -10,17 +10,26 @@ import ArkTable from "@/components/tables";
 import ArkCharts from "@/components/Charts";
 import PieChartComp from "@/components/Analytics/PieChart";
 import TwoColStrip from "@/components/Analytics/TwoColStrip";
-import { RenderStatus, formatCurrency, formatDate } from "@/lib/helper";
+import {
+  RenderStatus,
+  formatCurrency,
+  formatDate,
+  getAssetStatus,
+  getUserLabel,
+  getinterestRateColor,
+} from "@/lib/helper";
 import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
 import GhostButtons from "@/components/Buttons/GhostButtons";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { URL_FETCH_PENDING_ASSETS } from "@/constants/config";
+import { URL_FETCH_DEALS, URL_FETCH_PENDING_ASSETS } from "@/constants/config";
 import { useRouter } from "next/navigation";
 
 export default function RMDashboard() {
   const [unApprovedAssets, setUnApprovedAssets] = useState([]);
-  // const [unApprovedAssets, setUnApprovedAssets] = useState([])
+  const [initiatedDeals, setInitiatedDeals] = useState([]);
+  const [activeDeals, setActiveDeals] = useState([]);
+  const [newActiveFlag, setNewActiveFlag] = useState("new");
   // const [unApprovedAssets, setUnApprovedAssets] = useState([])
   const router = useRouter();
 
@@ -54,82 +63,115 @@ export default function RMDashboard() {
     {
       title: "Return (P.A)",
       dataIndex: "return",
-      render: (text) => <span>{text}%</span>,
+      render: (text) => (
+        <b style={{ color: getinterestRateColor(text) }}>{text}%</b>
+      ),
     },
     {
       title: "Status",
       dataIndex: "eligibility",
-      render: (text) => (
-        <span>
-          <RenderStatus status={text === "false" ? "pending" : "success"} />
-        </span>
-      ),
+      render: (_, data) => {
+        return (
+          <span>
+            <RenderStatus status={getAssetStatus(data)} />
+          </span>
+        );
+      },
     },
   ];
+
   const dataSource2 = [
     {
-      title: "Listing name",
-      dataIndex: "name",
+      title: "Asset",
+      dataIndex: "assetName",
       sorter: (a, b) => a.name - b.name,
     },
     {
       title: "Category",
-      dataIndex: "category",
-      sorter: (a, b) => a.category - b.category,
-    },
-    {
-      title: "Date",
-      dataIndex: "listedDate",
+      dataIndex: "categoryName",
       sorter: (a, b) => a.date - b.date,
     },
     {
-      title: "Loan Amount",
+      title: "Start Date",
+      dataIndex: "createdOn",
+      render: (text) => <span>{text.split("T")[0]}</span>,
+      sorter: (a, b) => a.category - b.category,
+    },
+    {
+      title: "End Date",
+      dataIndex: "expiryDate",
+      render: (text) => <span>{text.split("T")[0]}</span>,
+      sorter: (a, b) => a.date - b.date,
+    },
+    {
+      title: "Amount",
       dataIndex: "loanAmount",
+      render: (text) => formatCurrency(text),
+    },
+    {
+      title: "Yield",
+      dataIndex: "interestRate",
+      render: (text) => (
+        <b style={{ color: getinterestRateColor(text) }}>{text}%</b>
+      ),
     },
     {
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "dealStatus",
+      render: (text, data) => {
+        return (
+          <span>
+            <RenderStatus status={text} />
+          </span>
+        );
+      },
     },
   ];
 
-  const rowData = [
-    {
-      name: "Picasso Painting",
-      category: "Fine Art",
-      listedDate: "12/09/2023",
-      loanAmount: "$60,000",
-      tenure: "6 Months",
-      return: "8%",
-      status: "Pending",
-    },
-    {
-      name: "Vista View",
-      category: "Real Estate",
-      listedDate: "12/09/2023",
-      loanAmount: "$60,000",
-      tenure: "6 Months",
-      return: "8%",
-      status: "Pending",
-    },
-    {
-      name: "XX Bonds",
-      category: "Bonds",
-      listedDate: "12/09/2023",
-      loanAmount: "$60,000",
-      tenure: "6 Months",
-      return: "8%",
-      status: "Pending",
-    },
-    {
-      name: "YY Carbon Credits",
-      category: "Carbon Credits",
-      listedDate: "12/09/2023",
-      loanAmount: "$60,000",
-      tenure: "6 Months",
-      return: "8%",
-      status: "Pending",
-    },
-  ];
+  const getInitiatedDeals = async () => {
+    const config = {
+      url: URL_FETCH_DEALS,
+      method: "GET",
+      params: { dealStatus: "INITIATED" },
+    };
+
+    try {
+      const resp = await axios(config);
+      setInitiatedDeals(
+        resp.data
+          .map((e) => ({
+            ...e,
+            assetName: e.asset.assetName,
+            categoryName: e?.asset?.category?.categoryName,
+          }))
+          .reverse()
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getActiveDeals = async () => {
+    const config = {
+      url: URL_FETCH_DEALS,
+      method: "GET",
+      params: { dealStatus: "ACTIVE" },
+    };
+
+    try {
+      const resp = await axios(config);
+      setActiveDeals(
+        resp.data
+          .map((e) => ({
+            ...e,
+            assetName: e.asset.assetName,
+            categoryName: e?.asset?.category?.categoryName,
+          }))
+          .reverse()
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getUnapprovedAssets = async () => {
     const config = {
@@ -141,12 +183,14 @@ export default function RMDashboard() {
       const resp = await axios(config);
 
       setUnApprovedAssets(
-        resp.data.map((e) => ({
-          ...e,
-          categoryName: e.category.categoryName,
-          tenure: e.paymentTerms?.duration,
-          return: e.paymentTerms?.rMInterestRate,
-        }))
+        resp.data
+          .map((e) => ({
+            ...e,
+            categoryName: e.category.categoryName,
+            tenure: e.paymentTerms?.duration,
+            return: e.paymentTerms?.rMInterestRate,
+          }))
+          .reverse()
       );
     } catch (error) {
       console.error(error);
@@ -155,6 +199,8 @@ export default function RMDashboard() {
 
   useEffect(() => {
     getUnapprovedAssets();
+    getInitiatedDeals();
+    getActiveDeals();
   }, []);
 
   console.log(unApprovedAssets);
@@ -175,7 +221,7 @@ export default function RMDashboard() {
             maxWidth: "940px",
           }}
         >
-          <p className={styles.pageTitle}>Hello, Relationship Manager</p>
+          <p className={styles.pageTitle}>Hello, {getUserLabel()}</p>
           <div
             style={{
               display: "flex",
@@ -367,8 +413,45 @@ export default function RMDashboard() {
           />
           <ArkTable
             title="Loan Agreement Applications"
-            rowData={rowData}
+            rowData={newActiveFlag === "new" ? initiatedDeals : activeDeals}
             columnData={dataSource2}
+            secondlineContent={
+              <div
+                style={{
+                  backgroundColor: "white",
+                  display: "flex",
+                  paddingLeft: "20px",
+                }}
+              >
+                <span
+                  className={[
+                    styles.table_subitem,
+                    newActiveFlag === "new" ? styles.active_table_subitem : "",
+                  ].join(" ")}
+                  onClick={() => setNewActiveFlag("new")}
+                >
+                  New
+                </span>
+                <span
+                  className={[
+                    styles.table_subitem,
+                    newActiveFlag === "active"
+                      ? styles.active_table_subitem
+                      : "",
+                  ].join(" ")}
+                  onClick={() => setNewActiveFlag("active")}
+                >
+                  Active
+                </span>
+              </div>
+            }
+            onRow={(record) => {
+              return {
+                onClick: () => {
+                  router.push("/rm/validate-loan?loan=" + record.dealId);
+                },
+              };
+            }}
           />
         </div>
       </div>

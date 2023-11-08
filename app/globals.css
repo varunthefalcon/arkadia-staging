@@ -100,3 +100,7 @@ th {
 .filter_input .ant-input-group-addon {
   background-color: white !important  ;
 }
+
+.notificationItem:hover {
+  background-color: silver;
+}

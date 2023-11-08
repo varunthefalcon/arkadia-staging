@@ -13,6 +13,14 @@ export const URL_VIEW_ASSET = URL_BASE + "/asset/fetchAsset/";
 
 export const URL_INITIATE_DEAL = URL_BASE + "/deal/initiatedeal";
 
+export const URL_FETCH_DEALS = URL_BASE + "/deal/fetchDealsByStatus";
+
+export const URL_FETCH_DEAL = URL_BASE + "/deal/fetchdeal/";
+
+export const URL_DEAL_UPDATE_RM_STATUS = URL_BASE + "/deal/updateRMstatus/";
+
+export const URL_DEAL_UPDATE_AO_CR_STATUS = URL_BASE + "/deal/updatestatus/";
+
 export const URL_RM_PENDING_ASSET =
   URL_BASE + "/rm/fetchValidationPendingAssets";
 

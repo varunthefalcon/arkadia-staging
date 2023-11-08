@@ -9,12 +9,14 @@ import Navbar from "@/components/Navbar";
 import { useEffect, useRef, useState } from "react";
 import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
 import { useRouter } from "next/navigation";
-import { URL_AO_LIST_ASSET } from "@/constants/config";
+import { URL_AO_LIST_ASSET, URL_FETCH_DEALS } from "@/constants/config";
 import {
   RenderStatus,
   formatCurrency,
+  getAssetStatus,
   getUserDetails,
   getUserInfo,
+  getUserLabel,
   setUserDetails,
 } from "@/lib/helper";
 import axios from "axios";
@@ -58,18 +60,81 @@ export default function SignIn() {
     {
       title: "Status",
       dataIndex: "eligibility",
-      render: (text) => (
-        <span>
-          <RenderStatus status={text === "false" ? "pending" : "success"} />
-        </span>
-      ),
+      render: (text, data) => {
+        return (
+          <span>
+            <RenderStatus status={getAssetStatus(data)} />
+          </span>
+        );
+      },
     },
   ];
+
+  // const dataSource2 = [
+  //   {
+  //     title: "Asset",
+  //     dataIndex: "assetName",
+  //     sorter: (a, b) => a.name - b.name,
+  //   },
+  //   {
+  //     title: "Category",
+  //     dataIndex: "assetPrice",
+  //     sorter: (a, b) => a.date - b.date,
+  //     render: (text) => formatCurrency(text),
+  //   },
+  //   {
+  //     title: "Start Date",
+  //     dataIndex: "categoryName",
+  //     sorter: (a, b) => a.category - b.category,
+  //   },
+  //   {
+  //     title: "End Date",
+  //     dataIndex: "createdOn",
+  //     render: (text) => <span>{text.split("T")[0]}</span>,
+  //     sorter: (a, b) => a.date - b.date,
+  //   },
+  //   {
+  //     title: "Amount",
+  //     dataIndex: "loanRequested",
+  //     render: (text) => formatCurrency(text),
+  //   },
+  //   {
+  //     title: "Yield",
+  //     dataIndex: "tenure",
+  //     render: (text) => <span>{text} months</span>,
+  //   },
+  //   {
+  //     title: "Status",
+  //     dataIndex: "eligibility",
+  //     render: (text, data) => {
+  //       console.log(text);
+
+  //       const getStatus = (text, data) => {
+  //         if (text === "true") {
+  //           return "listed";
+  //         } else if (data?.paymentTerms?.rMStatus === "NO-GO") {
+  //           return "rejected";
+  //         } else if (data?.paymentTerms?.rMStatus === "GO") {
+  //           return "rmApproved";
+  //         }
+
+  //         return "pending";
+  //       };
+
+  //       return (
+  //         <span>
+  //           <RenderStatus status={getStatus(text, data)} />
+  //         </span>
+  //       );
+  //     },
+  //   },
+  // ];
 
   const [inputModalOpen, setInputModalOpen] = useState(false);
   const [alertModalOpen, setAlertModalOpen] = useState(false);
   const [investAmountSubmitFlag, setInvestAmountSubmitFlag] = useState(false);
   const [assetRows, setAssetRows] = useState([]);
+  const [deals, setDeals] = useState([]);
 
   const router = useRouter();
   const user = getUserInfo();
@@ -101,22 +166,49 @@ export default function SignIn() {
     try {
       const resp = await axios(config);
       setAssetRows(
-        resp.data.map((e) => ({
-          ...e,
-          tenure: e.paymentTerms.duration,
-          interestRate: e.paymentTerms.rMInterestRate,
-          categoryName: e.category.categoryName,
-        }))
+        resp.data
+          .map((e) => ({
+            ...e,
+            tenure: e.paymentTerms.duration,
+            interestRate: e.paymentTerms.rMInterestRate,
+            categoryName: e.category.categoryName,
+          }))
+          .reverse()
       );
     } catch (error) {
       console.log(error);
     }
   };
 
+  // const getDeals = async () => {
+  //   const config = {
+  //     url: URL_FETCH_DEALS,
+  //     method: "GET",
+  //     params: { dealStatus: "INITIATED" },
+  //   };
+
+  //   try {
+  //     const resp = await axios(config);
+  //     setDeals(
+  //       resp.data
+  //         .map((e) => ({
+  //           ...e,
+  //           tenure: e.paymentTerms.duration,
+  //           interestRate: e.paymentTerms.rMInterestRate,
+  //           categoryName: e.category.categoryName,
+  //         }))
+  //         .reverse()
+  //     );
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   const isInvestorApproved = getUserDetails("isInvestor");
 
   useEffect(() => {
     getListings();
+    // getDeals();
   }, []);
 
   return (
@@ -291,7 +383,7 @@ export default function SignIn() {
               </div>
             </>
           )}
-          <p className={styles.pageTitle}>Hello, Asset Owner</p>
+          <p className={styles.pageTitle}>Hello, {getUserLabel()}</p>
 
           <div
             style={{
@@ -375,13 +467,13 @@ export default function SignIn() {
             localeLabel={"Digital Asset Onboarding Application"}
           />
 
-          <ArkTable
+          {/* <ArkTable
             title="My Investment"
-            columnData={dataSource}
+            columnData={dataSource2}
             rowData={[]}
             emptylistAsText={true}
             localeLabel="You have no investments record."
-          />
+          /> */}
         </div>
       </div>
 

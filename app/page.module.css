@@ -21,7 +21,7 @@
 }
 
 .landing_title {
-  font-family: var(--font-frank);
+  font-family: var(--font-inter);
   font-size: 56px;
   font-weight: 600;
   color: #050c36;
@@ -32,7 +32,7 @@
 }
 
 .landing_subtitle {
-  font-family: var(--font-mulish);
+  font-family: var(--font-inter);
   font-size: 16px;
   font-weight: 600;
   line-height: 27px;
@@ -55,7 +55,7 @@
 }
 
 .landing_stat_wrapper_value {
-  font-family: Frank Ruhl Libre;
+  font-family: var(--font-inter);
   font-size: 32px;
   font-weight: 700;
   line-height: 35px;
