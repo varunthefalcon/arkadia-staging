@@ -27,7 +27,7 @@ const ViewAsset = () => {
   const getCashrichId = async (customerId) => {
     try {
       const resp = await axios.get(
-        "http://defi.ap-southeast-1.elasticbeanstalk.com:9002/defi/api/v1/cashrich/croffer?customerId=" +
+        "https://prod.defidata.net/defi/api/v1/cashrich/croffer?customerId=" +
           customerId
       );
       setCashRichOfferId(resp.data[0].cashRichOfferId);

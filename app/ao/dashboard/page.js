@@ -185,10 +185,10 @@ export default function SignIn() {
     const config = {
       url:
         user.customerType === "AO"
-          ? "http://defi.ap-southeast-1.elasticbeanstalk.com:9002/defi/api/v1/deal/fetchdeal/" +
+          ? "https://prod.defidata.net/defi/api/v1/deal/fetchdeal/" +
             user.customerId +
             "/asset"
-          : "http://defi.ap-southeast-1.elasticbeanstalk.com:9002/defi/api/v1/deal/fetchdeal/" +
+          : "https://prod.defidata.net/defi/api/v1/deal/fetchdeal/" +
             user.customerId +
             "/cashRich",
       method: "GET",

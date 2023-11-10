@@ -37,7 +37,7 @@ const Navbar = (props) => {
       const config = {
         method: "GET",
         url:
-          "http://defi.ap-southeast-1.elasticbeanstalk.com:9002/defi/api/v1/notification/fetchcustomernotifications?customerId=" +
+          "https://prod.defidata.net/defi/api/v1/notification/fetchcustomernotifications?customerId=" +
           user.customerId,
       };
       const resp = await axios(config);
