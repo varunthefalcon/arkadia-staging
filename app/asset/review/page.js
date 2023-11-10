@@ -3,7 +3,7 @@
 import Navbar from "@/components/Navbar";
 import styles from "./page.module.css";
 import { useCallback, useState, useEffect } from "react";
-import { Alert, Checkbox, Col, Input, Row, Select } from "antd";
+import { Alert, Checkbox, Col, Input, Modal, Row, Select } from "antd";
 import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
 import GhostButtons from "@/components/Buttons/GhostButtons";
 import { toast } from "react-toastify";
@@ -25,6 +25,7 @@ const ReviewAsset = () => {
   const [assetInfo, setAssetInfo] = useState({});
   const [loading, setLoading] = useState(false);
   const [eligibilityFlag, setEligibilityFlag] = useState("no"); // yes, loading
+  const [inputModalOpen, setInputModalOpen] = useState(false);
 
   const url = useSearchParams();
   const router = useRouter();
@@ -59,10 +60,13 @@ const ReviewAsset = () => {
     };
     try {
       await axios(config);
-      toast.success(
+      setInputModalOpen(
         `Asset ${status === "GO" ? "accepted" : "rejected"} Successfully`
       );
-      router.push("/ao/dashboard");
+      // toast.success(
+      //   `Asset ${status === "GO" ? "accepted" : "rejected"} Successfully`
+      // );
+      // router.push("/ao/dashboard");
     } catch (error) {
       console.error(error);
     } finally {
@@ -225,6 +229,27 @@ const ReviewAsset = () => {
             </div>
           )}
         </div>
+        <Modal
+          title={<b>Borrow Request reviewed</b>}
+          closable={true}
+          style={{ textAlign: "center" }}
+          centered
+          footer={[
+            <div style={{ textAlign: "center" }} key="modal_footer_1">
+              <PrimaryButtons
+                label="Close"
+                onPress={() => router.push("/ao/dashboard")}
+              />
+            </div>,
+          ]}
+          open={!!inputModalOpen}
+          maskStyle={{ backgroundColor: "#050C36", opacity: 0.5 }}
+          onOk={() => setInputModalOpen(false)}
+          onCancel={() => setInputModalOpen(false)}
+          width={450}
+        >
+          <p style={{ margin: "24px 0 32px 0" }}>{inputModalOpen}</p>
+        </Modal>
       </div>
     </>
   );

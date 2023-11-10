@@ -22,12 +22,17 @@ import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
 import GhostButtons from "@/components/Buttons/GhostButtons";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { URL_FETCH_DEALS, URL_FETCH_PENDING_ASSETS } from "@/constants/config";
+import {
+  URL_FETCH_DEALS,
+  URL_FETCH_PENDING_ASSETS,
+  URL_RM_CR_APPROVAL_REQUESTS,
+} from "@/constants/config";
 import { useRouter } from "next/navigation";
 
 export default function RMDashboard() {
   const [unApprovedAssets, setUnApprovedAssets] = useState([]);
   const [initiatedDeals, setInitiatedDeals] = useState([]);
+  const [investors, setInvestors] = useState([]);
   const [activeDeals, setActiveDeals] = useState([]);
   const [newActiveFlag, setNewActiveFlag] = useState("new");
   // const [unApprovedAssets, setUnApprovedAssets] = useState([])
@@ -128,6 +133,70 @@ export default function RMDashboard() {
     },
   ];
 
+  const dataSource3 = [
+    {
+      title: "Name",
+      dataIndex: "assetName",
+      render: (text) => <span>Albert Owen</span>,
+      sorter: (a, b) => a.name - b.name,
+    },
+    {
+      title: "Account",
+      dataIndex: "categoryName",
+      render: (text) => <span>123-456-789</span>,
+      sorter: (a, b) => a.date - b.date,
+    },
+    {
+      title: "Start Date",
+      dataIndex: "createdOn",
+      render: (text) => <span>2023-10-31</span>,
+      // sorter: (a, b) => a.category - b.category,
+    },
+    {
+      title: "End Date",
+      dataIndex: "expiryDate",
+      render: (text) => <span>2023-10-31</span>,
+      // sorter: (a, b) => a.date - b.date,
+    },
+    {
+      title: "Amount",
+      dataIndex: "desiredAmount",
+      render: (text) => formatCurrency(text),
+    },
+    {
+      title: "Status",
+      dataIndex: "dealStatus",
+      render: (text, data) => {
+        return (
+          <span>
+            <RenderStatus status={"pending"} />
+          </span>
+        );
+      },
+    },
+  ];
+  const getInvestors = async () => {
+    const config = {
+      url: URL_RM_CR_APPROVAL_REQUESTS,
+      method: "GET",
+    };
+
+    try {
+      const resp = await axios(config);
+      setInvestors(
+        resp.data
+          .map((e) => ({
+            ...e,
+            assetName: e?.asset?.assetName,
+            categoryName: e?.asset?.category?.categoryName,
+          }))
+          .reverse()
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getInitiatedDeals = async () => {
     const config = {
       url: URL_FETCH_DEALS,
@@ -201,6 +270,7 @@ export default function RMDashboard() {
     getUnapprovedAssets();
     getInitiatedDeals();
     getActiveDeals();
+    getInvestors();
   }, []);
 
   console.log(unApprovedAssets);
@@ -249,7 +319,7 @@ export default function RMDashboard() {
                 title1={"Active Clients"}
                 title2={"Active Loans"}
                 subTitle1={"35/40"}
-                subTitle2={"10"}
+                subTitle2={initiatedDeals.length + activeDeals.length}
                 bgColor="#F8F8FD"
                 fontColor="black"
                 borderColor="#EAEBF9"
@@ -359,7 +429,6 @@ export default function RMDashboard() {
             </div>
           </div> */}
           </>
-
           <br />
           <p>
             <b>Charts</b>
@@ -399,6 +468,21 @@ export default function RMDashboard() {
             </div>
           </div>
 
+          <ArkTable
+            title="Investor Application"
+            rowData={investors.slice(0, 4)}
+            columnData={dataSource3}
+            onRow={(record) => {
+              return {
+                onClick: () => {
+                  router.push(
+                    "/rm/validate-investor"
+                    // ?assetId=" + record.assetId
+                  );
+                },
+              };
+            }}
+          />
           <ArkTable
             title="Listings Application"
             rowData={unApprovedAssets}

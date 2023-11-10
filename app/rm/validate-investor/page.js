@@ -137,7 +137,7 @@ const ValidateAsset = () => {
   };
 
   useEffect(() => {
-    getAsset();
+    // getAsset();
   }, [getAsset]);
 
   console.log(assetInfo);
@@ -147,34 +147,21 @@ const ValidateAsset = () => {
       <Navbar showPages={true} showUserActions={true} />
       <div style={{ backgroundColor: "#EAEBF9" }}>
         <div className={styles.wrapper}>
-          <p className={styles.pageTitle}>Borrow Request Application</p>
+          <p className={styles.pageTitle}>New Investor Application</p>
           <p className={styles.subTitle}>Listing Information</p>
 
-          {assetStatus == "rejected" && (
-            <div style={{ marginBottom: "3rem" }}>
-              <Alert
-                message="This Borrow request is rejected."
-                type="error"
-                showIcon
-              />
-            </div>
-          )}
           <form name="basic" onSubmit={handleSubmit}>
-            <label className={styles.label}>
-              Asset Name
-              <p>{assetInfo.assetName}</p>
-            </label>
             <Row gutter={20}>
               <Col span={12}>
                 <label className={styles.label}>
-                  Asset Type
-                  <p>{assetInfo.assetType}</p>
+                  Account ID
+                  <p>{assetInfo.assetName || "John Doe"}</p>
                 </label>
               </Col>
               <Col span={12}>
                 <label className={styles.label}>
                   Asset Value
-                  <p>{formatCurrency(assetInfo.assetPrice)}</p>
+                  <p>{formatCurrency(assetInfo.assetPrice || 500000)}</p>
                 </label>
               </Col>
             </Row>
@@ -183,57 +170,14 @@ const ValidateAsset = () => {
             <Row gutter={20}>
               <Col span={12}>
                 <label className={styles.label}>
-                  Desired Loan Amount
-                  <p>{formatCurrency(assetInfo.loanRequested)}</p>
+                  Name of Bank
+                  <p>ABC Bank</p>
                 </label>
               </Col>
               <Col span={12}>
                 <label className={styles.label}>
-                  Loan Tenure
-                  <p>{assetInfo?.paymentTerms?.duration || 0} months</p>
-                </label>
-              </Col>
-              <Col span={12}>
-                <label className={styles.label}>
-                  Interest Rates Offered*
-                  <Input
-                    disabled={assetStatus !== "pending"}
-                    style={{ margin: "8px 0 24px 0" }}
-                    onChange={handleAssetInfoChange}
-                    name="rMInterestRate"
-                    value={assetInfo.rMInterestRate}
-                    type="number"
-                  />
-                </label>
-              </Col>
-
-              <Col span={12}>
-                <label className={styles.label}>
-                  Start date*
-                  <div style={{ margin: "8px 0 24px 0" }}>
-                    <Input
-                      disabled={assetStatus !== "pending"}
-                      // onChange={handleAssetInfoChange}
-                      name="startDate"
-                      // value={assetInfo.name}
-                      type="date"
-                    />
-                  </div>
-                </label>
-              </Col>
-
-              <Col span={12}>
-                <label className={styles.label}>
-                  Final Maturity date*
-                  <div style={{ margin: "8px 0 24px 0" }}>
-                    <Input
-                      disabled={assetStatus !== "pending"}
-                      // onChange={handleAssetInfoChange}
-                      name="endDate"
-                      // value={assetInfo.name}
-                      type="date"
-                    />
-                  </div>
+                  Account Number
+                  <p>234-111-734</p>
                 </label>
               </Col>
             </Row>
@@ -304,14 +248,6 @@ const ValidateAsset = () => {
                 )}
               </span>
             </div>
-            <div className={[styles.progressIcons, styles.lastElem].join(" ")}>
-              <ArkBadge label="3" />
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <span>
-                Asset Value <br />
-                <small>Validate asset Value</small>
-              </span>
-            </div>
             {assetStatus === "rmApproved" && (
               <div className={[styles.progressIcons].join(" ")}>
                 <CheckCircleFilled
@@ -349,23 +285,21 @@ const ValidateAsset = () => {
               </div>
             )}
 
-            {assetStatus == "pending" && (
-              <div style={{ textAlign: "center" }}>
-                <GhostButtons
-                  onPress={handleReject}
-                  label="Reject"
-                  disabled={!!loading}
-                />
-                &nbsp;
-                <PrimaryButtons
-                  onPress={handleSubmit}
-                  disabled={!!loading}
-                  // type="submit"
-                  loading={!!loading}
-                  label="Approve"
-                />
-              </div>
-            )}
+            <div style={{ textAlign: "center" }}>
+              <GhostButtons
+                // onPress={handleReject}
+                label="Reject"
+                disabled={!!loading}
+              />
+              &nbsp;
+              <PrimaryButtons
+                // onPress={handleSubmit}
+                disabled={!!loading}
+                // type="submit"
+                loading={!!loading}
+                label="Approve"
+              />
+            </div>
           </form>
         </div>
       </div>

@@ -1,5 +1,5 @@
-export const URL_BASE =
-  "http://defi.ap-southeast-1.elasticbeanstalk.com:9002/defi/api/v1";
+export const URL_BASE = "https://prod.defidata.net/defi/api/v1";
+// "http://defi.ap-southeast-1.elasticbeanstalk.com:9002/defi/api/v1";
 export const URL_LOGIN = URL_BASE + "/customer/login";
 
 export const URL_CREATE_ASSET = URL_BASE + "/asset/createAsset";
@@ -20,6 +20,9 @@ export const URL_FETCH_DEAL = URL_BASE + "/deal/fetchdeal/";
 export const URL_DEAL_UPDATE_RM_STATUS = URL_BASE + "/deal/updateRMstatus/";
 
 export const URL_DEAL_UPDATE_AO_CR_STATUS = URL_BASE + "/deal/updatestatus/";
+
+export const URL_RM_CR_APPROVAL_REQUESTS =
+  URL_BASE + "/cashrich/croffers?eligibility=false";
 
 export const URL_RM_PENDING_ASSET =
   URL_BASE + "/rm/fetchValidationPendingAssets";

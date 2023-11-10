@@ -114,7 +114,7 @@ const Navbar = (props) => {
                 <div
                   style={{
                     padding: "0",
-                    width: "280px",
+                    width: "300px",
                     position: "relative",
                   }}
                 >

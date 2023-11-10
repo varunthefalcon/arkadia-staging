@@ -401,6 +401,7 @@ const ValidateAsset = () => {
               &nbsp;
               <PrimaryButtons
                 onPress={handleApprove}
+                loading={!!loading}
                 disabled={
                   !!loading ||
                   validationFlag !== "yes" ||

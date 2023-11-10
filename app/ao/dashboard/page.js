@@ -70,65 +70,66 @@ export default function SignIn() {
     },
   ];
 
-  // const dataSource2 = [
-  //   {
-  //     title: "Asset",
-  //     dataIndex: "assetName",
-  //     sorter: (a, b) => a.name - b.name,
-  //   },
-  //   {
-  //     title: "Category",
-  //     dataIndex: "assetPrice",
-  //     sorter: (a, b) => a.date - b.date,
-  //     render: (text) => formatCurrency(text),
-  //   },
-  //   {
-  //     title: "Start Date",
-  //     dataIndex: "categoryName",
-  //     sorter: (a, b) => a.category - b.category,
-  //   },
-  //   {
-  //     title: "End Date",
-  //     dataIndex: "createdOn",
-  //     render: (text) => <span>{text.split("T")[0]}</span>,
-  //     sorter: (a, b) => a.date - b.date,
-  //   },
-  //   {
-  //     title: "Amount",
-  //     dataIndex: "loanRequested",
-  //     render: (text) => formatCurrency(text),
-  //   },
-  //   {
-  //     title: "Yield",
-  //     dataIndex: "tenure",
-  //     render: (text) => <span>{text} months</span>,
-  //   },
-  //   {
-  //     title: "Status",
-  //     dataIndex: "eligibility",
-  //     render: (text, data) => {
-  //       console.log(text);
+  const dataSource2 = [
+    {
+      title: "Asset",
+      dataIndex: "assetName",
+      sorter: (a, b) => a.name - b.name,
+    },
+    {
+      title: "Category",
+      dataIndex: "categoryName",
+      sorter: (a, b) => a.date - b.date,
+      // render: (text) => formatCurrency(text),
+    },
+    {
+      title: "Start Date",
+      dataIndex: "createdOn",
+      render: (text) => <span>{text.split("T")[0]}</span>,
+      sorter: (a, b) => a.category - b.category,
+    },
+    {
+      title: "End Date",
+      dataIndex: "expiryDate",
+      render: (text) => <span>{text.split("T")[0]}</span>,
+      sorter: (a, b) => a.date - b.date,
+    },
+    {
+      title: "Amount",
+      dataIndex: "loanAmount",
+      render: (text) => formatCurrency(text),
+    },
+    {
+      title: "Yield",
+      dataIndex: "interestRate",
+      render: (text) => <span>{text} months</span>,
+    },
+    {
+      title: "Status",
+      dataIndex: "dealStatus",
+      render: (text, data) => {
+        console.log(text);
 
-  //       const getStatus = (text, data) => {
-  //         if (text === "true") {
-  //           return "listed";
-  //         } else if (data?.paymentTerms?.rMStatus === "NO-GO") {
-  //           return "rejected";
-  //         } else if (data?.paymentTerms?.rMStatus === "GO") {
-  //           return "rmApproved";
-  //         }
+        const getStatus = (text, data) => {
+          if (text === "true") {
+            return "listed";
+          } else if (data?.paymentTerms?.rMStatus === "NO-GO") {
+            return "rejected";
+          } else if (data?.paymentTerms?.rMStatus === "GO") {
+            return "rmApproved";
+          }
 
-  //         return "pending";
-  //       };
+          return "pending";
+        };
 
-  //       return (
-  //         <span>
-  //           <RenderStatus status={getStatus(text, data)} />
-  //         </span>
-  //       );
-  //     },
-  //   },
-  // ];
+        return (
+          <span>
+            <RenderStatus status={text} />
+          </span>
+        );
+      },
+    },
+  ];
 
   const [inputModalOpen, setInputModalOpen] = useState(false);
   const [alertModalOpen, setAlertModalOpen] = useState(false);
@@ -180,41 +181,50 @@ export default function SignIn() {
     }
   };
 
-  // const getDeals = async () => {
-  //   const config = {
-  //     url: URL_FETCH_DEALS,
-  //     method: "GET",
-  //     params: { dealStatus: "INITIATED" },
-  //   };
+  const getDeals = async () => {
+    const config = {
+      url:
+        user.customerType === "AO"
+          ? "http://defi.ap-southeast-1.elasticbeanstalk.com:9002/defi/api/v1/deal/fetchdeal/" +
+            user.customerId +
+            "/asset"
+          : "http://defi.ap-southeast-1.elasticbeanstalk.com:9002/defi/api/v1/deal/fetchdeal/" +
+            user.customerId +
+            "/cashRich",
+      method: "GET",
+    };
 
-  //   try {
-  //     const resp = await axios(config);
-  //     setDeals(
-  //       resp.data
-  //         .map((e) => ({
-  //           ...e,
-  //           tenure: e.paymentTerms.duration,
-  //           interestRate: e.paymentTerms.rMInterestRate,
-  //           categoryName: e.category.categoryName,
-  //         }))
-  //         .reverse()
-  //     );
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+    try {
+      const resp = await axios(config);
+      setDeals(
+        resp.data
+          .map((e) => ({
+            ...e,
+            assetName: e?.asset?.assetName,
+            categoryName: e?.asset?.category?.categoryName,
+
+            // tenure: e.paymentTerms.duration,
+            // interestRate: e.paymentTerms.rMInterestRate,
+            // categoryName: e.category.categoryName,
+          }))
+          .reverse()
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const isInvestorApproved = getUserDetails("isInvestor");
 
   useEffect(() => {
     getListings();
-    // getDeals();
+    getDeals();
   }, []);
 
   return (
     <main>
       <Navbar showPages={true} showUserActions={true} />
-      {!isInvestorApproved && (
+      {!isInvestorApproved && user.customerType == "AO" && (
         <div
           style={{
             position: "relative",
@@ -282,12 +292,34 @@ export default function SignIn() {
         style={{
           display: "flex",
           justifyContent: "center",
+          backgroundColor:
+            !isInvestorApproved && user.customerType == "AO"
+              ? "white"
+              : "#EAEBF9",
         }}
       >
+        <Image
+          src="/assets/Waves 3.png"
+          alt="Next.js subtitle"
+          style={{
+            position: "absolute",
+            clipPath: "inset(50px 0 0 0)",
+            top: 0,
+            right: 0,
+            paddingTop: "4px",
+            marginLeft: "10px",
+            overflow: "hidden",
+            zIndex: 0,
+          }}
+          height={500}
+          width={window.screen.availWidth}
+          priority
+        />
         <div
           style={{
             width: "100%",
             maxWidth: "940px",
+            zIndex: 2,
           }}
         >
           {isInvestorApproved && (
@@ -402,14 +434,46 @@ export default function SignIn() {
                 title1={"Outstanding Loan Amount"}
                 title2={"Amount Invested"}
                 subTitle1={formatCurrency(20000)}
-                subTitle2={"-"}
+                subTitle2={formatCurrency(
+                  assetRows.reduce((a, e) => a + e.loanRequested, 0)
+                )}
                 style={{ marginBottom: "10px" }}
+                bgColor={
+                  !isInvestorApproved && user.customerType == "AO"
+                    ? undefined
+                    : "#F8F8FD"
+                }
+                fontColor={
+                  !isInvestorApproved && user.customerType == "AO"
+                    ? undefined
+                    : "black"
+                }
+                borderColor={
+                  !isInvestorApproved && user.customerType == "AO"
+                    ? undefined
+                    : "silver"
+                }
               />
               <TwoColStrip
+                bgColor={
+                  !isInvestorApproved && user.customerType == "AO"
+                    ? undefined
+                    : "#F8F8FD"
+                }
+                fontColor={
+                  !isInvestorApproved && user.customerType == "AO"
+                    ? undefined
+                    : "black"
+                }
+                borderColor={
+                  !isInvestorApproved && user.customerType == "AO"
+                    ? undefined
+                    : "silver"
+                }
                 key={2}
                 title1={"Assets"}
                 title2={"Active Loans"}
-                subTitle1={3}
+                subTitle1={assetRows.length}
                 subTitle2={"1"}
               />
             </div>
@@ -447,9 +511,9 @@ export default function SignIn() {
             rowData={assetRows}
             emptylistAsButton={true}
             localeOnClick={
-              isInvestorApproved
-                ? () => router.push("/asset/new")
-                : handleApplyToInvestor
+              // isInvestorApproved ?
+              () => router.push("/asset/new")
+              // : handleApplyToInvestor
             }
             onRow={(record) => {
               return {
@@ -459,12 +523,25 @@ export default function SignIn() {
               };
             }}
             rBtnOnClick={
-              isInvestorApproved
-                ? () => router.push("/asset/new")
-                : handleApplyToInvestor
+              // isInvestorApproved ?
+              () => router.push("/asset/new")
+              // : handleApplyToInvestor
             }
             rBtnLabel={"Digital Asset Onboarding Application"}
             localeLabel={"Digital Asset Onboarding Application"}
+          />
+
+          <ArkTable
+            title="My Investments"
+            rowData={deals}
+            columnData={dataSource2}
+            onRow={(record) => {
+              return {
+                onClick: () => {
+                  router.push("/loan/validate-loan?loan=" + record.dealId);
+                },
+              };
+            }}
           />
 
           {/* <ArkTable
