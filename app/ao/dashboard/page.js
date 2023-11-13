@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Image from "next/image";
 import { Alert, Button, Form, Modal, Table } from "antd";
@@ -23,7 +23,7 @@ import axios from "axios";
 import TwoColStrip from "@/components/Analytics/TwoColStrip";
 import PieChartComp from "@/components/Analytics/PieChart";
 
-export default function SignIn() {
+export default function Dashboard() {
   const dataSource = [
     {
       title: "Listing name",
