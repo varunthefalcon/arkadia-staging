@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Image from "next/image";
 import { Button, Form } from "antd";
@@ -25,6 +25,7 @@ export default function Marketplace() {
   const [assetTypes, setAssetTypes] = useState([]);
   const [apiFlag, setAPIFlag] = useState(false);
   const user = getUserInfo();
+  const [windowWidth, setWindowWidth] = useState(900);
 
   // const dataSource = [
   //   {
@@ -103,6 +104,7 @@ export default function Marketplace() {
 
   useEffect(() => {
     getListings();
+    setWindowWidth(window.screen.availWidth);
   }, []);
 
   return (
@@ -130,7 +132,7 @@ export default function Marketplace() {
             overflow: "hidden",
           }}
           height={500}
-          width={window.screen.availWidth}
+          width={windowWidth}
           priority
         />
         <div

@@ -136,6 +136,7 @@ export default function Dashboard() {
   const [investAmountSubmitFlag, setInvestAmountSubmitFlag] = useState(false);
   const [assetRows, setAssetRows] = useState([]);
   const [deals, setDeals] = useState([]);
+  const [windowWidth, setWindowWidth] = useState(900);
 
   const router = useRouter();
   const user = getUserInfo();
@@ -219,6 +220,7 @@ export default function Dashboard() {
   useEffect(() => {
     getListings();
     getDeals();
+    setWindowWidth(window.screen.availWidth);
   }, []);
 
   return (
@@ -240,7 +242,7 @@ export default function Dashboard() {
               right: 0,
               marginLeft: "10px",
             }}
-            width={window.screen.width / 1.4}
+            width={windowWidth / 1.4}
             height={300}
             priority
           />
@@ -312,7 +314,7 @@ export default function Dashboard() {
             zIndex: 0,
           }}
           height={500}
-          width={window.screen.availWidth}
+          width={windowWidth}
           priority
         />
         <div
