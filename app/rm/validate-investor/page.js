@@ -161,7 +161,7 @@ const ValidateAsset = () => {
               <Col span={12}>
                 <label className={styles.label}>
                   Asset Value
-                  <p>{formatCurrency(assetInfo.assetPrice || 500000)}</p>
+                  <p>{formatCurrency(url.get("amount") || 500000)}</p>
                 </label>
               </Col>
             </Row>

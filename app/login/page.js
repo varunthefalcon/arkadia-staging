@@ -20,7 +20,6 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [apiLoading, setAPILoading] = useState(false);
   const router = useRouter();
-  const user = getUserInfo();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,6 +56,7 @@ export default function SignIn() {
   };
 
   useEffect(() => {
+    const user = getUserInfo();
     if (user.customerType === "AO") {
       router.push("/ao/dashboard");
     } else if (user.customerType === "CRO") {

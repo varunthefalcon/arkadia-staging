@@ -28,6 +28,7 @@ import {
   URL_RM_CR_APPROVAL_REQUESTS,
 } from "@/constants/config";
 import { useRouter } from "next/navigation";
+import BarChartComp from "@/components/Analytics/BarChart";
 
 export default function RMDashboard() {
   const [unApprovedAssets, setUnApprovedAssets] = useState([]);
@@ -35,6 +36,8 @@ export default function RMDashboard() {
   const [investors, setInvestors] = useState([]);
   const [activeDeals, setActiveDeals] = useState([]);
   const [newActiveFlag, setNewActiveFlag] = useState("new");
+  const [chartToggleFlag, setChartToggleFlag] = useState(true);
+
   // const [unApprovedAssets, setUnApprovedAssets] = useState([])
   const router = useRouter();
 
@@ -441,14 +444,32 @@ export default function RMDashboard() {
               margin: "15px 0 10px 0",
             }}
           >
-            <PrimaryButtons
-              labelStyle={{ fontWeight: "bold" }}
-              label="Aggregated Clients Cash Inflow"
-            />
-            <GhostButtons
-              labelStyle={{ fontWeight: "bold" }}
-              label="Client Loan Maturity"
-            />
+            {chartToggleFlag ? (
+              <PrimaryButtons
+                labelStyle={{ fontWeight: "bold" }}
+                label="Aggregated Clients Cash Inflow"
+                onPress={() => setChartToggleFlag((e) => !e)}
+              />
+            ) : (
+              <GhostButtons
+                labelStyle={{ fontWeight: "bold" }}
+                onPress={() => setChartToggleFlag((e) => !e)}
+                label="Aggregated Clients Cash Inflow"
+              />
+            )}
+            {!chartToggleFlag ? (
+              <PrimaryButtons
+                labelStyle={{ fontWeight: "bold" }}
+                onPress={() => setChartToggleFlag((e) => !e)}
+                label="Client Loan Maturity"
+              />
+            ) : (
+              <GhostButtons
+                onPress={() => setChartToggleFlag((e) => !e)}
+                labelStyle={{ fontWeight: "bold" }}
+                label="Client Loan Maturity"
+              />
+            )}
           </div>
           <div
             style={{
@@ -464,20 +485,22 @@ export default function RMDashboard() {
               <p className={styles.bannerValue}>SGD 10,694.36</p>
             </div>
             <div style={{ height: "300px" }}>
-              <ArkCharts />
+              {chartToggleFlag ? <ArkCharts /> : <BarChartComp />}
             </div>
           </div>
 
           <ArkTable
             title="Investor Application"
-            rowData={investors.slice(0, 4)}
+            rowData={investors}
             columnData={dataSource3}
             onRow={(record) => {
               return {
                 onClick: () => {
                   router.push(
-                    "/rm/validate-investor"
-                    // ?assetId=" + record.assetId
+                    "/rm/validate-investor?aoID=" +
+                      record.cashRichOfferId +
+                      "&amount=" +
+                      record.desiredAmount
                   );
                 },
               };

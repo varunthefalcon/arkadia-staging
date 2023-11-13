@@ -1,6 +1,6 @@
 "use client";
 
-import { getUserDetails } from "@/lib/helper";
+import { getUserInfo } from "@/lib/helper";
 import { useRouter as useNavigationRouter } from "next/navigation";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -12,8 +12,8 @@ const AuthComp = () => {
 
   const navigate = useNavigationRouter();
   useEffect(() => {
-    const customerType = getUserDetails("customerType");
-    if (!customerType) {
+    const user = getUserInfo();
+    if (!user.customerType) {
       if (["/", "/login"].includes(pathname)) return;
       toast.error("You are not allowed to access the page.");
       navigate.push("/");

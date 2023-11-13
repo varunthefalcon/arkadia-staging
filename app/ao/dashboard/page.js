@@ -9,7 +9,11 @@ import Navbar from "@/components/Navbar";
 import { useEffect, useRef, useState } from "react";
 import PrimaryButtons from "@/components/Buttons/PrimaryButtons";
 import { useRouter } from "next/navigation";
-import { URL_AO_LIST_ASSET, URL_FETCH_DEALS } from "@/constants/config";
+import {
+  URL_AO_LIST_ASSET,
+  URL_AO_REQUEST_INVESTOR,
+  URL_FETCH_DEALS,
+} from "@/constants/config";
 import {
   RenderStatus,
   formatCurrency,
@@ -22,6 +26,7 @@ import {
 import axios from "axios";
 import TwoColStrip from "@/components/Analytics/TwoColStrip";
 import PieChartComp from "@/components/Analytics/PieChart";
+import AuthComp from "@/components/auth";
 
 export default function Dashboard() {
   const dataSource = [
@@ -147,15 +152,28 @@ export default function Dashboard() {
     setInputModalOpen(true);
   };
 
-  const handleInvestAmountSubmit = () => {
+  const handleInvestAmountSubmit = async () => {
     setInvestAmountSubmitFlag(true);
 
-    setTimeout(() => {
+    const config = {
+      url: URL_AO_REQUEST_INVESTOR + user.customerId,
+      params: {
+        investAmount: investAmountRef.current.input.value,
+      },
+      method: "PUT",
+    };
+
+    try {
+      await axios(config);
+    } catch (error) {
+      console.error(error);
+    } finally {
       setUserDetails("isInvestor", true);
       setUserDetails("isInvestorAmount", investAmountRef.current.input.value);
       setInputModalOpen(false);
       setAlertModalOpen(true);
-    }, 2000);
+      setInvestAmountSubmitFlag(false);
+    }
   };
 
   const getListings = async () => {
@@ -225,6 +243,8 @@ export default function Dashboard() {
 
   return (
     <main>
+      <AuthComp />
+
       <Navbar showPages={true} showUserActions={true} />
       {!isInvestorApproved && user.customerType == "AO" && (
         <div
@@ -256,7 +276,7 @@ export default function Dashboard() {
               gap: "50px",
             }}
           >
-            <div>
+            <div style={{ zIndex: 4 }}>
               <p className={styles.banner_title}>You can be an investor too</p>
               <p className={styles.banner_sub_title}>
                 Get validated and start investing now.
@@ -300,23 +320,25 @@ export default function Dashboard() {
               : "#EAEBF9",
         }}
       >
-        <Image
-          src="/assets/Waves 3.png"
-          alt="Next.js subtitle"
-          style={{
-            position: "absolute",
-            clipPath: "inset(50px 0 0 0)",
-            top: 0,
-            right: 0,
-            paddingTop: "4px",
-            marginLeft: "10px",
-            overflow: "hidden",
-            zIndex: 0,
-          }}
-          height={500}
-          width={windowWidth}
-          priority
-        />
+        {isInvestorApproved && (
+          <Image
+            src="/assets/Waves 3.png"
+            alt="Next.js subtitle"
+            style={{
+              position: "absolute",
+              clipPath: "inset(50px 0 0 0)",
+              top: 0,
+              right: 0,
+              paddingTop: "4px",
+              marginLeft: "10px",
+              overflow: "hidden",
+              zIndex: 0,
+            }}
+            height={500}
+            width={windowWidth}
+            priority
+          />
+        )}
         <div
           style={{
             width: "100%",

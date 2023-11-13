@@ -24,6 +24,8 @@ export const URL_DEAL_UPDATE_AO_CR_STATUS = URL_BASE + "/deal/updatestatus/";
 export const URL_RM_CR_APPROVAL_REQUESTS =
   URL_BASE + "/cashrich/croffers?eligibility=false";
 
+export const URL_AO_REQUEST_INVESTOR = URL_BASE + "/customer/enable/investor/";
+
 export const URL_RM_PENDING_ASSET =
   URL_BASE + "/rm/fetchValidationPendingAssets";
 
