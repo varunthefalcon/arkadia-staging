@@ -62,26 +62,24 @@ const ValidateAsset = () => {
   }, [assetId]);
 
   const handleReject = async (e) => {
-    if (!confirm("Are you sure to reject?")) return;
-
     e.preventDefault();
-
+    if (!confirm("Are you sure to reject?")) return;
     try {
       const config = {
         method: "PUT",
         url: URL_RM_VALIDATE_ASSET,
         data: {
-          assetId: url.get("assetId"),
-          rMInterestRate: assetInfo.rMInterestRate,
+          cashRichOfferId: url.get("aoID"),
+          rMInterestRate: 5.8,
           rMInterestType: "Floating",
-          rMDuration: assetInfo?.paymentTerms?.duration,
+          rMDuration: 10,
           rMInterestPayoutCycle: "Half-Yearly",
           rMStatus: "NO-GO",
         },
       };
       setLoading(true);
       const resp = await axios(config);
-      toast.success("Loan Agreement Rejected Successfully.");
+      toast.success("Investor approved Successfully.");
       router.push("/rm/dashboard");
       console.log(resp);
     } catch (error) {
@@ -97,29 +95,22 @@ const ValidateAsset = () => {
 
     if (!confirm("Are you sure to approve?")) return;
 
-    if (!assetInfo.rMInterestRate) {
-      toast.warning("Interest rate is required!");
-      return;
-    }
-
     try {
       const config = {
         method: "PUT",
         url: URL_RM_VALIDATE_ASSET,
         data: {
-          assetId: url.get("assetId"),
-          rMInterestRate: assetInfo.rMInterestRate,
+          cashRichOfferId: url.get("aoID"),
+          rMInterestRate: 5.8,
           rMInterestType: "Floating",
-          duration: assetInfo?.paymentTerms?.duration,
+          rMDuration: 10,
           rMInterestPayoutCycle: "Half-Yearly",
           rMStatus: "GO",
         },
       };
       setLoading(true);
       const resp = await axios(config);
-      toast.success(
-        "Loan Agreement approved Successfully and sent for AO acceptance."
-      );
+      toast.success("Investor approved Successfully.");
       router.push("/rm/dashboard");
       console.log(resp);
     } catch (error) {
@@ -287,13 +278,13 @@ const ValidateAsset = () => {
 
             <div style={{ textAlign: "center" }}>
               <GhostButtons
-                // onPress={handleReject}
+                onPress={handleReject}
                 label="Reject"
                 disabled={!!loading}
               />
               &nbsp;
               <PrimaryButtons
-                // onPress={handleSubmit}
+                onPress={handleSubmit}
                 disabled={!!loading}
                 // type="submit"
                 loading={!!loading}
