@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { getUserDetails } from "@/lib/helper";
 import { useRouter as useNavigationRouter } from "next/navigation";
