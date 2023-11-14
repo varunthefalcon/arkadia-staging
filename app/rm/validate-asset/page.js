@@ -359,7 +359,7 @@ const ValidateAsset = () => {
                 &nbsp;
                 <PrimaryButtons
                   onPress={handleSubmit}
-                  disabled={!!loading || eligibilityFlag === "no"}
+                  disabled={!!loading || eligibilityFlag !== "yes"}
                   // type="submit"
                   loading={!!loading}
                   label="Approve"
