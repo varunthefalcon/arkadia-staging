@@ -498,7 +498,7 @@ export default function Dashboard() {
                 title1={"Assets"}
                 title2={"Active Loans"}
                 subTitle1={assetRows.length}
-                subTitle2={"1"}
+                subTitle2={deals.length}
               />
             </div>
             <div
